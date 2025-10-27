@@ -5,6 +5,8 @@ import Link from "next/link";
 import { MapPin, Star, Calendar } from "lucide-react";
 import { Card, CardHeader, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
 
 const doctors = [
     {
@@ -67,32 +69,52 @@ const doctors = [
         experience: 16,
         image: "/doctors/doctor-1.jpg",
     },
-    {
-        id: 7,
-        name: "Dr. Robert Kim",
-        specialty: "General Practitioner",
-        rating: 4.8,
-        reviews: 445,
-        location: "Seattle, WA",
-        experience: 16,
-        image: "/doctors/doctor-1.jpg",
-    },
-    {
-        id: 8,
-        name: "Dr. Lisa Patel",
-        specialty: "Neurologist",
-        rating: 4.9,
-        reviews: 378,
-        location: "Boston, MA",
-        experience: 14,
-        image: "/doctors/doctor-1.jpg",
-    },
 ];
+
+// ✨ Sparkle Component (fixed purity)
+function Sparkle({ delay }: { delay: number }) {
+    const [x, setX] = useState(() => Math.random() * 100);
+    const [y, setY] = useState(() => Math.random() * 100);
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setX(Math.random() * 100);
+            setY(Math.random() * 100);
+        }, 3000);
+        return () => clearInterval(interval);
+    }, []);
+
+    return (
+        <motion.div
+            className="absolute w-2 h-2 bg-blue-400 rounded-full blur-sm opacity-70"
+            style={{ top: `${y}%`, left: `${x}%` }}
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{
+                scale: [0, 1.2, 0],
+                opacity: [0, 1, 0],
+            }}
+            transition={{
+                delay,
+                duration: 3,
+                repeat: Infinity,
+                ease: "easeInOut",
+            }}
+        />
+    );
+}
 
 export default function DoctorList() {
     return (
-        <section className="py-10 bg-gray-50 dark:bg-[#0f172a]">
-            <div className="container mx-auto px-6 text-center">
+        <section className="relative py-10 bg-gray-50 dark:bg-[#0f172a] overflow-hidden">
+            {/* ✨ Floating Sparkles Background */}
+            <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                {[...Array(20)].map((_, i) => (
+                    // eslint-disable-next-line react-hooks/purity
+                    <Sparkle key={i} delay={Math.random() * 5} />
+                ))}
+            </div>
+
+            <div className="container mx-auto px-6 text-center relative z-10">
                 {/* Header */}
                 <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
                     Top Rated Doctors
@@ -102,11 +124,11 @@ export default function DoctorList() {
                 </p>
 
                 {/* Doctor Cards */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                     {doctors.map((doctor) => (
                         <Card
                             key={doctor.id}
-                            className="shadow-sm hover:shadow-md transition-shadow bg-white dark:bg-gray-900 border-gray-100 dark:border-gray-800 rounded-2xl"
+                            className="shadow-sm hover:shadow-md transition-shadow bg-white dark:bg-gray-900 border-gray-100 dark:border-gray-800 rounded-2xl relative z-10"
                         >
                             <CardHeader className="flex flex-col items-center text-center">
                                 <div className="relative w-24 h-24 mb-4">
@@ -114,7 +136,7 @@ export default function DoctorList() {
                                         src={doctor.image}
                                         alt={doctor.name}
                                         fill
-                                        className="rounded-full border-2 border-blue-500"
+                                        className="rounded-full border-2 border-blue-500 object-cover"
                                     />
                                 </div>
                                 <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
