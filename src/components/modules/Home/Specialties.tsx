@@ -11,7 +11,7 @@ const specialists = [
 
 const Specialties = () => {
     return (
-        <section className="py-10 bg-background">
+        <section className="py-10 bg-gray-50 dark:bg-[#0f172a]">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Header */}
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-12">

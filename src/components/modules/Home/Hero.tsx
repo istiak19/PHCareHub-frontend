@@ -48,7 +48,7 @@ export default function Hero({
     );
 
     return (
-        <section className="relative w-full overflow-hidden bg-linear-to-br from-blue-50 via-white to-teal-50 dark:from-[#0a0a0f] dark:via-[#0d1117] dark:to-[#0f172a]">
+        <section className="w-full overflow-hidden bg-linear-to-br from-blue-50 via-white to-teal-50 dark:from-[#0a0a0f] dark:via-[#0d1117] dark:to-[#0f172a]">
             {/* Sparkles */}
             <div className="absolute inset-0 z-0">
                 {sparkles.map((s, idx) => (
