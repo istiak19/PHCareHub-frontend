@@ -91,7 +91,7 @@ const doctors = [
 
 export default function DoctorList() {
     return (
-        <section className="py-16 bg-gray-50 dark:bg-[#0f172a]">
+        <section className="py-10 bg-gray-50 dark:bg-[#0f172a]">
             <div className="container mx-auto px-6 text-center">
                 {/* Header */}
                 <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
@@ -155,7 +155,7 @@ export default function DoctorList() {
                             </CardContent>
 
                             <CardFooter className="flex justify-center mt-4">
-                                <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl cursor-pointer">
+                                <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md cursor-pointer">
                                     Book Appointment
                                 </Button>
                             </CardFooter>
