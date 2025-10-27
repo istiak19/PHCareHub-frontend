@@ -16,7 +16,7 @@ const navigationLinks = [
 
 export default function Navbar() {
   return (
-    <header className="border-b px-4 md:px-6">
+    <header className="border-b px-4 md:px-6 sticky top-0 z-0">
       <div className="flex h-16 items-center justify-between gap-4">
         {/* Left side */}
         <div className="flex items-center gap-2">
@@ -79,7 +79,7 @@ export default function Navbar() {
               <div className="relative w-10 h-10 overflow-hidden group-hover:scale-105 transition-transform duration-200">
                 <Image src={logo} alt="Logo" fill />
               </div>
-              <span className="text-xl font-bold text-primary group-hover:from-blue-600 group-hover:to-purple-600 transition-all duration-300">
+              <span className="text-xl ml-2 font-bold text-primary group-hover:from-blue-600 group-hover:to-purple-600 transition-all duration-300">
                 PHCareHub
               </span>
             </Link>
