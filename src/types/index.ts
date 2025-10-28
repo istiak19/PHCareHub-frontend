@@ -24,3 +24,8 @@ export interface HeroProps {
         onSubmit?: (data: any) => void;
     };
 };
+
+export interface ILogin {
+    email: string;
+    password: string
+};

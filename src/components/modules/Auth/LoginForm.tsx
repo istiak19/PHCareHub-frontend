@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useState } from "react";
@@ -10,6 +11,8 @@ import { Label } from "@/components/ui/label";
 import { Eye, EyeOff, LogIn } from "lucide-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import loginUser from "@/utility/login";
+import { toast } from "react-toastify";
 
 // ✅ Zod schema for validation
 const loginSchema = z.object({
@@ -31,11 +34,20 @@ const LoginForm = () => {
     const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<LoginFormInputs>({ resolver: zodResolver(loginSchema) });
 
     const onSubmit = async (data: LoginFormInputs) => {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { remember, ...loginData } = data;
-        console.log(loginData)
-        await new Promise((resolve) => setTimeout(resolve, 1500));
-        alert(`Welcome back, ${data.email.split("@")[0]}!`);
+        try {
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            const { remember, ...loginData } = data;
+            console.log(loginData)
+            const res = await loginUser(loginData);
+            // Optional: Add a short delay for UX (you can keep it or remove it)
+            await new Promise((resolve) => setTimeout(resolve, 1500));
+            if (res?.success) {
+                toast.success(`Welcome back, ${loginData.email.split("@")[0]}!`);
+            }
+        } catch (error: any) {
+            console.log(error);
+            toast.error(error.message || "Something went wrong");
+        }
     };
 
     return (

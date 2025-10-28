@@ -5,7 +5,7 @@ import logo from "../../../../public/logo.png";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Image from "next/image";
 import Link from "next/link";
-import LoginForm from "@/components/modules/Login/LoginForm";
+import LoginForm from "@/components/modules/Auth/LoginForm";
 
 const Login = () => {
     return (
