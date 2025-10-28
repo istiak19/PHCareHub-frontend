@@ -15,7 +15,7 @@ export default function Footer() {
                         <div className="relative w-10 h-10 overflow-hidden group-hover:scale-105 transition-transform duration-200">
                             <Image src={logo} alt="Logo" fill />
                         </div>
-                        <span className="text-xl ml-2 font-bold text-primary group-hover:from-blue-600 group-hover:to-purple-600 transition-all duration-300">
+                        <span className="text-xl ml-2 font-bold bg-linear-to-r from-blue-600 to-cyan-500 text-transparent bg-clip-text group-hover:from-blue-600 group-hover:to-purple-600 transition-all duration-300">
                             PHCareHub
                         </span>
                     </div>

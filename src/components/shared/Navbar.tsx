@@ -2,12 +2,7 @@
 
 import logo from "../../../public/logo.png";
 import { Button } from "@/components/ui/button";
-import {
-  NavigationMenu,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-} from "@/components/ui/navigation-menu";
+import { NavigationMenu, NavigationMenuItem, NavigationMenuLink, NavigationMenuList } from "@/components/ui/navigation-menu";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import Image from "next/image";
 import Link from "next/link";
@@ -86,7 +81,7 @@ export default function Navbar() {
               <div className="relative w-10 h-10 overflow-hidden group-hover:scale-105 transition-transform duration-200">
                 <Image src={logo} alt="Logo" fill />
               </div>
-              <span className="text-xl ml-2 font-bold text-primary">
+              <span className="text-xl ml-2 font-bold bg-linear-to-r from-blue-600 to-cyan-500 text-transparent bg-clip-text">
                 PHCareHub
               </span>
             </Link>
