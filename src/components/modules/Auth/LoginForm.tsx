@@ -13,6 +13,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import loginUser from "@/utility/login";
 import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 // ✅ Zod schema for validation
 const loginSchema = z.object({
@@ -29,6 +30,7 @@ const loginSchema = z.object({
 type LoginFormInputs = z.infer<typeof loginSchema>;
 
 const LoginForm = () => {
+    const router = useRouter();
     const [showPassword, setShowPassword] = useState(false);
 
     const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<LoginFormInputs>({ resolver: zodResolver(loginSchema) });
@@ -43,6 +45,7 @@ const LoginForm = () => {
             await new Promise((resolve) => setTimeout(resolve, 1500));
             if (res?.success) {
                 toast.success(`Welcome back, ${loginData.email.split("@")[0]}!`);
+                router.push("/dashboard")
             }
         } catch (error: any) {
             console.log(error);
