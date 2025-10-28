@@ -56,7 +56,7 @@ const About = () => {
                     <div className="inline-flex items-center gap-2 bg-white dark:bg-gray-900 px-4 py-2 rounded-full shadow-sm mb-4">
                         <Sparkles className="text-blue-600 size-4" />
                         <span className="text-sm font-medium text-blue-600">
-                            About CareHub
+                            About PHCareHub
                         </span>
                     </div>
 
@@ -64,7 +64,7 @@ const About = () => {
                         Transforming Healthcare with AI
                     </h1>
                     <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-                        At <span className="font-semibold text-blue-600">CareHub</span>, our
+                        At <span className="font-semibold text-blue-600">PHCareHub</span>, our
                         mission is to make healthcare smarter, faster, and more accessible
                         for everyone. We use AI to connect patients with the most suitable
                         doctors and provide intelligent recommendations — all within
@@ -138,7 +138,7 @@ const About = () => {
                     </h2>
                     <p className="text-gray-600 dark:text-gray-400 mb-8 max-w-xl mx-auto">
                         Be part of a movement that’s changing how people access medical
-                        care. Discover, connect, and heal smarter with CareHub.
+                        care. Discover, connect, and heal smarter with PHCareHub.
                     </p>
                     <Button className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-6 rounded-xl">
                         Contact Our Team
