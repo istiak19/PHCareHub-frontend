@@ -3,8 +3,17 @@
 
 import logo from "../../../public/logo.png";
 import { Button } from "@/components/ui/button";
-import { NavigationMenu, NavigationMenuItem, NavigationMenuLink, NavigationMenuList } from "@/components/ui/navigation-menu";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  NavigationMenu,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+} from "@/components/ui/navigation-menu";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -14,6 +23,7 @@ import { useEffect, useState } from "react";
 import logoutUser from "@/utility/logout";
 import { toast } from "react-toastify";
 
+// Base navigation links
 const navigationLinks = [
   { href: "/", label: "Home" },
   { href: "/features", label: "Features" },
@@ -36,16 +46,38 @@ export default function Navbar() {
   const handLogout = async () => {
     const res = await logoutUser();
     if (res.success) {
-      toast.success('Logout successful');
-    };
+      toast.success("Logout successful");
+      setAuth({ isAuthenticated: false, user: null });
+      setTimeout(() => {
+        window.location.href = "/";
+      }, 1000);
+    } else {
+      toast.error("Failed to logout");
+    }
   };
+
+  // Add role-based dashboard route dynamically
+  const roleDashboardLink = auth.isAuthenticated
+    ? auth.user?.role === "ADMIN"
+      ? { href: "/dashboard/admin", label: "Admin Dashboard" }
+      : auth.user?.role === "DOCTOR"
+        ? { href: "/dashboard/doctor", label: "Doctor Dashboard" }
+        : auth.user?.role === "PATIENT"
+          ? { href: "/dashboard/patient", label: "Patient Dashboard" }
+          : null
+    : null;
+
+  // Combine base links + dashboard link if exists
+  const navLinks = roleDashboardLink
+    ? [...navigationLinks, roleDashboardLink]
+    : [...navigationLinks];
 
   return (
     <header className="border-b px-4 md:px-6 sticky top-0 z-50 bg-background/80 backdrop-blur-lg">
       <div className="flex h-16 items-center justify-between gap-4">
         {/* Left side */}
         <div className="flex items-center gap-2">
-          {/* Mobile menu trigger */}
+          {/* Mobile Menu */}
           <Popover>
             <PopoverTrigger asChild>
               <Button
@@ -73,7 +105,7 @@ export default function Navbar() {
             <PopoverContent align="start" className="w-36 p-1 md:hidden">
               <NavigationMenu className="max-w-none *:w-full">
                 <NavigationMenuList className="flex-col items-start gap-0 md:gap-2">
-                  {navigationLinks.map((link, index) => {
+                  {navLinks.map((link, index) => {
                     const isActive = pathname === link.href;
                     return (
                       <NavigationMenuItem key={index} className="w-full">
@@ -96,7 +128,7 @@ export default function Navbar() {
             </PopoverContent>
           </Popover>
 
-          {/* Logo and Main nav */}
+          {/* Logo */}
           <div className="flex items-center gap-6">
             <Link href="/" className="flex items-center group">
               <div className="relative w-10 h-10 overflow-hidden group-hover:scale-105 transition-transform duration-200">
@@ -110,7 +142,7 @@ export default function Navbar() {
             {/* Desktop Navigation */}
             <NavigationMenu className="max-md:hidden">
               <NavigationMenuList className="gap-4">
-                {navigationLinks.map((link, index) => {
+                {navLinks.map((link, index) => {
                   const isActive = pathname === link.href;
                   return (
                     <NavigationMenuItem key={index}>
@@ -136,19 +168,22 @@ export default function Navbar() {
         {/* Right side */}
         <div className="flex items-center gap-2">
           <ModeToggle />
+
           {auth.isAuthenticated ? (
-            <Button size="sm"
+            <Button
               onClick={handLogout}
-              className="cursor-pointer"
-            >Logout</Button>
-          ) : (
-            <Button asChild
               size="sm"
-              className="cursor-pointer"
-            ><Link href="/login">Login</Link></Button>
+              className="cursor-pointer bg-red-600 hover:bg-red-700 text-white"
+            >
+              Logout
+            </Button>
+          ) : (
+            <Button asChild size="sm" className="cursor-pointer">
+              <Link href="/login">Login</Link>
+            </Button>
           )}
         </div>
       </div>
     </header>
   );
-};
+}
