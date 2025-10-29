@@ -4,9 +4,9 @@ import type { NextRequest } from 'next/server'
 // This function can be marked `async` if using `await` inside
 export function proxy(request: NextRequest) {
 
-    const token = request.cookies.get('accessToken')?.value;
+    const token = request.cookies.get("accessToken")?.value;
 
-    console.log(token)
+    // console.log(token)
 
     const { pathname } = request.nextUrl;
 
@@ -16,25 +16,25 @@ export function proxy(request: NextRequest) {
 
     const isProtectedPath = protectedPaths.some((path) => {
         pathname.startsWith(path);
-    })
+    });
 
     // current path auth route or not
     const isAuthRoute = authRoutes.some((route) =>
         pathname === route
-    )
+    );
 
-    console.log(isAuthRoute)
+    // console.log("AuthRoute", isAuthRoute);
 
     if (isProtectedPath && !token) {
-        return NextResponse.redirect(new URL('/login', request.url))
-    }
+        return NextResponse.redirect(new URL('/login', request.url));
+    };
 
     if (isAuthRoute && token) {
         console.log('hitting the correct block')
-        return NextResponse.redirect(new URL('/', request.url))
-    }
+        return NextResponse.redirect(new URL('/', request.url));
+    };
 
-    return NextResponse.next()
+    return NextResponse.next();
 }
 
 // See "Matching Paths" below to learn more
