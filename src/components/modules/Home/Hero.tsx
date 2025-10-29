@@ -40,7 +40,7 @@ export default function Hero({
 }: HeroProps) {
     const [symptoms, setSymptoms] = useState("");
     const [loading, setLoading] = useState(false);
-    const [result, setResult] = useState<string | null>(null);
+    const [result, setResult] = useState([]);
 
     const sparkles = Array.from({ length: SPARKLE_COUNT }).map(() => ({
         top: `${Math.random() * 100}%`,
@@ -61,7 +61,7 @@ export default function Hero({
             setLoading(true);
             const payload = { symptoms };
             const data = await aiSuggestions(payload);
-            setResult(data?.message || JSON.stringify(data, null, 2));
+            setResult(data.data);
             toast.success("AI analysis complete! Check below.");
         } catch (error: any) {
             toast.error(error.message || "Failed to get AI suggestions.");
@@ -196,9 +196,43 @@ export default function Hero({
                                 </Button>
                             </form>
 
-                            {result && (
-                                <div className="mt-6 bg-blue-50 dark:bg-blue-900/20 p-4 rounded-xl border border-blue-200/30 text-sm text-gray-800 dark:text-gray-200">
-                                    <pre className="whitespace-pre-wrap">{result}</pre>
+                            {result.length > 0 && (
+                                <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    {result.slice(0, 2).map((doctor: any) => (
+                                        <div
+                                            key={doctor.id}
+                                            className="flex flex-col bg-white/80 dark:bg-slate-900/70 border border-gray-200 dark:border-gray-700 rounded-2xl shadow-md p-4 space-y-2"
+                                        >
+                                            <div className="flex items-center gap-4">
+                                                <div>
+                                                    <h3 className="font-semibold text-gray-900 dark:text-gray-100">{doctor.name}</h3>
+                                                    <p className="text-sm text-gray-600 dark:text-gray-400">{doctor.designation}</p>
+                                                </div>
+                                            </div>
+
+                                            <div className="flex-1">
+                                                <p className="text-sm text-gray-700 dark:text-gray-300">
+                                                    Specialty:{" "}
+                                                    {doctor.doctorSpecialties.map((s: any) => s.specialities.title).join(", ")}
+                                                </p>
+
+                                                <p className="text-sm text-gray-700 dark:text-gray-300">
+                                                    Fee: ৳{doctor.appointmentFee}
+                                                </p>
+
+                                                <p className="text-sm text-gray-700 dark:text-gray-300">
+                                                    Working at: {doctor.currentWorkingPlace}
+                                                </p>
+                                            </div>
+
+                                            <Button
+                                                className="mt-2 w-full bg-linear-to-r from-blue-600 to-teal-500 text-white hover:from-teal-600 hover:to-blue-600 cursor-pointer"
+                                                onClick={() => toast.info(`Book appointment with ${doctor.name}`)}
+                                            >
+                                                Book Appointment
+                                            </Button>
+                                        </div>
+                                    ))}
                                 </div>
                             )}
 
