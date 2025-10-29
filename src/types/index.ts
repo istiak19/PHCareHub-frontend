@@ -37,3 +37,7 @@ export interface HeartbeatLoaderProps {
     animated?: boolean;
     showIcon?: boolean;
 };
+
+export interface AISuggestionPayload {
+    symptoms: string;
+};
