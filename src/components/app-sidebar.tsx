@@ -1,6 +1,6 @@
-"use client"
+/* eslint-disable @typescript-eslint/no-explicit-any */
+"use client";
 
-import * as React from "react"
 import {
   IconCamera,
   IconChartBar,
@@ -11,14 +11,13 @@ import {
   IconFileWord,
   IconFolder,
   IconHelp,
-  IconInnerShadowTop,
   IconListDetails,
   IconReport,
   IconSearch,
   IconSettings,
   IconUsers,
 } from "@tabler/icons-react"
-
+import logo from "../../public/logo.png";
 import { NavDocuments } from "@/components/nav-documents"
 import { NavMain } from "@/components/nav-main"
 import { NavSecondary } from "@/components/nav-secondary"
@@ -32,13 +31,12 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
+import checkAuthStatus from "@/utility/auth"
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import Image from "next/image";
 
 const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
   navMain: [
     {
       title: "Dashboard",
@@ -151,6 +149,15 @@ const data = {
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const [auth, setAuth] = useState<{ isAuthenticated: boolean; user: any | null }>({ isAuthenticated: false, user: null });
+
+  useEffect(() => {
+    const check = async () => {
+      const result = await checkAuthStatus(); setAuth(result);
+    };
+    check();
+  }, []);
+
   return (
     <Sidebar collapsible="offcanvas" {...props}>
       <SidebarHeader>
@@ -160,10 +167,14 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               asChild
               className="data-[slot=sidebar-menu-button]:p-1.5!"
             >
-              <a href="#">
-                <IconInnerShadowTop className="size-5!" />
-                <span className="text-base font-semibold">Acme Inc.</span>
-              </a>
+               <Link href="/" className="flex items-center group">
+              <div className="relative w-8 h-8 overflow-hidden group-hover:scale-105 transition-transform duration-200">
+                <Image src={logo} alt="Logo" fill />
+              </div>
+              <span className="text-xl ml-2 font-bold bg-linear-to-r from-blue-600 to-cyan-500 text-transparent bg-clip-text">
+                PHCareHub
+              </span>
+            </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
@@ -174,7 +185,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        {auth.user ? <NavUser user={auth.user} /> : null}
       </SidebarFooter>
     </Sidebar>
   )
