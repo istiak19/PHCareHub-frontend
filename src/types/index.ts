@@ -29,3 +29,11 @@ export interface ILogin {
     email: string;
     password: string
 };
+
+export interface HeartbeatLoaderProps {
+    text?: string;
+    size?: "sm" | "md" | "lg" | "xl";
+    className?: string;
+    animated?: boolean;
+    showIcon?: boolean;
+};
