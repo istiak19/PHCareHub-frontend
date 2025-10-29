@@ -14,6 +14,7 @@ import { motion } from "framer-motion";
 import loginUser from "@/utility/login";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
+import checkAuthStatus from "@/utility/auth";
 
 // ✅ Zod schema for validation
 const loginSchema = z.object({
@@ -45,8 +46,27 @@ const LoginForm = () => {
             await new Promise((resolve) => setTimeout(resolve, 1500));
             if (res?.success) {
                 toast.success(`Welcome back, ${loginData.email.split("@")[0]}!`);
-                router.push("/dashboard")
-            }
+                const authStatus = await checkAuthStatus();
+                if (authStatus.isAuthenticated && authStatus.user) {
+                    const { role } = authStatus.user;
+                    switch (role) {
+                        case "ADMIN":
+                            router.push("/dashboard/admin");
+                            break;
+                        case "DOCTOR":
+                            router.push("/dashboard/doctor");
+                            break;
+                        case "PATIENT":
+                            router.push("/dashboard/patient");
+                            break;
+                        default:
+                            router.push("/");
+                            break;
+                    }
+                } else {
+                    toast.error("Failed to retrieve user information after login.");
+                };
+            };
         } catch (error: any) {
             console.log(error);
             toast.error(error.message || "Something went wrong");
