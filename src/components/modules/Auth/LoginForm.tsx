@@ -40,13 +40,14 @@ const LoginForm = () => {
         try {
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const { remember, ...loginData } = data;
-            console.log(loginData)
             const res = await loginUser(loginData);
             // Optional: Add a short delay for UX (you can keep it or remove it)
             await new Promise((resolve) => setTimeout(resolve, 1500));
             if (res?.success) {
                 toast.success(`Welcome back, ${loginData.email.split("@")[0]}!`);
+
                 const authStatus = await checkAuthStatus();
+                
                 if (authStatus.isAuthenticated && authStatus.user) {
                     const { role } = authStatus.user;
                     switch (role) {

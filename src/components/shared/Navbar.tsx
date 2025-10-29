@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import logo from "../../../public/logo.png";
@@ -8,6 +9,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ModeToggle } from "../ui/modeToggle";
+import checkAuthStatus from "@/utility/auth";
+import { useEffect, useState } from "react";
+import logoutUser from "@/utility/logout";
+import { toast } from "react-toastify";
 
 const navigationLinks = [
   { href: "/", label: "Home" },
@@ -18,6 +23,22 @@ const navigationLinks = [
 
 export default function Navbar() {
   const pathname = usePathname();
+  const [auth, setAuth] = useState<{ isAuthenticated: boolean; user: any | null }>({ isAuthenticated: false, user: null });
+
+  useEffect(() => {
+    const check = async () => {
+      const result = await checkAuthStatus();
+      setAuth(result);
+    };
+    check();
+  }, []);
+
+  const handLogout = async () => {
+    const res = await logoutUser();
+    if (res.success) {
+      toast.success('Logout successful');
+    };
+  };
 
   return (
     <header className="border-b px-4 md:px-6 sticky top-0 z-50 bg-background/80 backdrop-blur-lg">
@@ -115,9 +136,17 @@ export default function Navbar() {
         {/* Right side */}
         <div className="flex items-center gap-2">
           <ModeToggle />
-          <Button asChild size="sm" className="text-sm">
-            <Link href="/login">Login</Link>
-          </Button>
+          {auth.isAuthenticated ? (
+            <Button size="sm"
+              onClick={handLogout}
+              className="cursor-pointer"
+            >Logout</Button>
+          ) : (
+            <Button asChild
+              size="sm"
+              className="cursor-pointer"
+            ><Link href="/login">Login</Link></Button>
+          )}
         </div>
       </div>
     </header>
