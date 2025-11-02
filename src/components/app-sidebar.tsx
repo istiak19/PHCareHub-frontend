@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import {
@@ -18,9 +17,9 @@ import {
   IconUsers,
 } from "@tabler/icons-react"
 import logo from "../../public/logo.png";
-import { NavDocuments } from "@/components/nav-documents"
+// import { NavDocuments } from "@/components/nav-documents"
 import { NavMain } from "@/components/nav-main"
-import { NavSecondary } from "@/components/nav-secondary"
+// import { NavSecondary } from "@/components/nav-secondary"
 import { NavUser } from "@/components/nav-user"
 import {
   Sidebar,
@@ -31,87 +30,43 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
-import checkAuthStatus from "@/utility/auth"
-import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { UseUser } from "@/Providers/UserProvider";
+
+const navMainItems = [
+  {
+    title: "Dashboard",
+    url: "#",
+    icon: IconDashboard,
+  },
+  // {
+  //   title: "Lifecycle",
+  //   url: "#",
+  //   icon: IconListDetails,
+  // },
+  // {
+  //   title: "Analytics",
+  //   url: "#",
+  //   icon: IconChartBar,
+  // },
+  // {
+  //   title: "Add Doctor",
+  //   url: "/dashboard/add-doctor",
+  //   icon: IconUsers,
+  // },
+]
+
+
+
 
 const data = {
-  navMain: [
-    {
-      title: "Dashboard",
-      url: "#",
-      icon: IconDashboard,
-    },
-    {
-      title: "Lifecycle",
-      url: "#",
-      icon: IconListDetails,
-    },
-    {
-      title: "Analytics",
-      url: "#",
-      icon: IconChartBar,
-    },
-    {
-      title: "Projects",
-      url: "#",
-      icon: IconFolder,
-    },
-    {
-      title: "Team",
-      url: "#",
-      icon: IconUsers,
-    },
-  ],
-  navClouds: [
-    {
-      title: "Capture",
-      icon: IconCamera,
-      isActive: true,
-      url: "#",
-      items: [
-        {
-          title: "Active Proposals",
-          url: "#",
-        },
-        {
-          title: "Archived",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Proposal",
-      icon: IconFileDescription,
-      url: "#",
-      items: [
-        {
-          title: "Active Proposals",
-          url: "#",
-        },
-        {
-          title: "Archived",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Prompts",
-      icon: IconFileAi,
-      url: "#",
-      items: [
-        {
-          title: "Active Proposals",
-          url: "#",
-        },
-        {
-          title: "Archived",
-          url: "#",
-        },
-      ],
-    },
-  ],
+  user: {
+    name: '',
+    email: '',
+    avatar: '',
+  },
+  navMain: navMainItems,
   navSecondary: [
     {
       title: "Settings",
@@ -129,34 +84,11 @@ const data = {
       icon: IconSearch,
     },
   ],
-  documents: [
-    {
-      name: "Data Library",
-      url: "#",
-      icon: IconDatabase,
-    },
-    {
-      name: "Reports",
-      url: "#",
-      icon: IconReport,
-    },
-    {
-      name: "Word Assistant",
-      url: "#",
-      icon: IconFileWord,
-    },
-  ],
+  
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const [auth, setAuth] = useState<{ isAuthenticated: boolean; user: any | null }>({ isAuthenticated: false, user: null });
-
-  useEffect(() => {
-    const check = async () => {
-      const result = await checkAuthStatus(); setAuth(result);
-    };
-    check();
-  }, []);
+  const { user } = UseUser();
 
   return (
     <Sidebar collapsible="offcanvas" {...props}>
@@ -167,26 +99,26 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               asChild
               className="data-[slot=sidebar-menu-button]:p-1.5!"
             >
-               <Link href="/" className="flex items-center group">
-              <div className="relative w-8 h-8 overflow-hidden group-hover:scale-105 transition-transform duration-200">
-                <Image src={logo} alt="Logo" fill />
-              </div>
-              <span className="text-xl ml-2 font-bold bg-linear-to-r from-blue-600 to-cyan-500 text-transparent bg-clip-text">
-                PHCareHub
-              </span>
-            </Link>
+              <Link href="/" className="flex items-center group">
+                <div className="relative w-8 h-8 overflow-hidden group-hover:scale-105 transition-transform duration-200">
+                  <Image src={logo} alt="Logo" fill />
+                </div>
+                <span className="text-xl ml-2 font-bold bg-linear-to-r from-blue-600 to-cyan-500 text-transparent bg-clip-text">
+                  PHCareHub
+                </span>
+              </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
-        <NavDocuments items={data.documents} />
-        <NavSecondary items={data.navSecondary} className="mt-auto" />
+        {/* <NavDocuments items={data.documents} /> */}
+        {/* <NavSecondary items={data.navSecondary} className="mt-auto" /> */}
       </SidebarContent>
       <SidebarFooter>
-        {auth.user ? <NavUser user={auth.user} /> : null}
+        {user ? <NavUser user={user} /> : null}
       </SidebarFooter>
     </Sidebar>
   )
-}
+};

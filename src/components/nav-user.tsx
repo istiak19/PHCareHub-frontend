@@ -28,17 +28,30 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar"
+import { UserInterface } from "@/types";
+import logoutUser from "@/utility/logout"
+import { toast } from "react-toastify"
+import { UseUser } from "@/Providers/UserProvider"
 
-export function NavUser({
-  user,
-}: {
-  user: {
-    name: string
-    email: string
-    profilePhoto: string
-  }
-}) {
-  const { isMobile } = useSidebar()
+interface NavUserProps {
+  user: UserInterface;
+};
+
+export function NavUser({ user }: NavUserProps) {
+  const { isMobile } = useSidebar();
+  const { setAuth } = UseUser();
+  const handLogout = async () => {
+    const res = await logoutUser();
+    if (res.success) {
+      toast.success("Logout successful");
+      setAuth({ isAuthenticated: false, user: null });
+      setTimeout(() => {
+        window.location.href = "/";
+      }, 1000);
+    } else {
+      toast.error("Failed to logout");
+    }
+  };
 
   return (
     <SidebarMenu>
@@ -98,7 +111,7 @@ export function NavUser({
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem onClick={handLogout}>
               <IconLogout />
               Log out
             </DropdownMenuItem>

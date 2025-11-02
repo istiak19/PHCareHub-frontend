@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 import { jwtDecode } from "jwt-decode";
-import { userInterface } from './types';
+import { UserInterface } from './types';
 
 const authRoutes = ['/login', '/register', '/forgot-password'];
 // const roleBasedRoutes = {
@@ -31,7 +31,7 @@ export async function proxy(request: NextRequest) {
         return NextResponse.redirect(new URL(`/login?redirect=${pathname}`, request.url));
     };
 
-    let user: userInterface | null = null;
+    let user: UserInterface | null = null;
 
     if (accessToken) {
         try {
