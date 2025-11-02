@@ -41,3 +41,11 @@ export interface HeartbeatLoaderProps {
 export interface AISuggestionPayload {
     symptoms: string;
 };
+
+export interface userInterface {
+    id: string;
+    email: string;
+    role: "ADMIN" | "DOCTOR" | "PATIENT";
+    exp: number;
+    iat: number;
+};

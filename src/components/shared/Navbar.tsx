@@ -22,6 +22,7 @@ import checkAuthStatus from "@/utility/auth";
 import { useEffect, useState } from "react";
 import logoutUser from "@/utility/logout";
 import { toast } from "react-toastify";
+import { UseUser } from "@/Providers/UserProvider";
 
 // Base navigation links
 const navigationLinks = [
@@ -42,6 +43,9 @@ export default function Navbar() {
     };
     check();
   }, []);
+
+  const {user}= UseUser();
+  console.log(user)
 
   const handLogout = async () => {
     const res = await logoutUser();
