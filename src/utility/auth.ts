@@ -9,6 +9,7 @@ const checkAuthStatus = async () => {
             credentials: "include",
         });
         const data = await res.json();
+
         if (!res.ok) {
             throw new Error("Failed to fetch authentication status.");
         };

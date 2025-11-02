@@ -11,7 +11,9 @@ const loginUser = async (payload: ILogin) => {
             body: JSON.stringify(payload),
             credentials: "include",
         });
+
         const data = await res.json();
+
         return data;
     } catch (err: any) {
         throw new Error(

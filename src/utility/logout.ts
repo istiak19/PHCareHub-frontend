@@ -8,6 +8,7 @@ const logoutUser = async () => {
             },
             credentials: "include",
         });
+
         const data = await res.json();
 
         return data;
