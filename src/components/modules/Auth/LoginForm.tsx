@@ -15,6 +15,7 @@ import loginUser from "@/utility/login";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import checkAuthStatus from "@/utility/auth";
+import { UseUser } from "@/Providers/UserProvider";
 
 // ✅ Zod schema for validation
 const loginSchema = z.object({
@@ -32,6 +33,7 @@ type LoginFormInputs = z.infer<typeof loginSchema>;
 
 const LoginForm = () => {
     const router = useRouter();
+    const { setUser } = UseUser();
     const [showPassword, setShowPassword] = useState(false);
 
     const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<LoginFormInputs>({ resolver: zodResolver(loginSchema) });
@@ -47,7 +49,8 @@ const LoginForm = () => {
                 toast.success(`Welcome back, ${loginData.email.split("@")[0]}!`);
 
                 const authStatus = await checkAuthStatus();
-                
+                setUser(authStatus.user);
+
                 if (authStatus.isAuthenticated && authStatus.user) {
                     const { role } = authStatus.user;
                     switch (role) {

@@ -1,24 +1,23 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 import { jwtDecode } from "jwt-decode";
-
-export interface userInterface {
-    id: string;
-    email: string;
-    role: "ADMIN" | "DOCTOR" | "PATIENT";
-    exp: number;
-    iat: number;
-};
+import { userInterface } from './types';
 
 const authRoutes = ['/login', '/register', '/forgot-password'];
+// const roleBasedRoutes = {
+//     ADMIN: ["/admin/dashboard",],
+//     DOCTOR: ["/doctor/dashboard"],
+//     PATIENT: [
+//         "/patient/dashboard",
+//         "/patient/appointments",
+//         "/patient/medical-records",
+//     ],
+// };
+
 const roleBasedRoutes = {
-    ADMIN: ["/admin/dashboard",],
-    DOCTOR: ["/doctor/dashboard"],
-    PATIENT: [
-        "/patient/dashboard",
-        "/patient/appointments",
-        "/patient/medical-records",
-    ],
+    ADMIN: ['/admin'],
+    DOCTOR: ['/doctor'],
+    PATIENT: ['/patient'],
 };
 
 export async function proxy(request: NextRequest) {
@@ -97,5 +96,5 @@ export async function proxy(request: NextRequest) {
 
 // See "Matching Paths" below to learn more
 export const config = {
-    matcher: ['/dashboard/:path*', '/login', '/register', '/forgot-password'],
+    matcher: ['/admin/:path*', '/doctor/:path*', '/patient/:path*', '/login', '/register', '/forgot-password'],
 };
