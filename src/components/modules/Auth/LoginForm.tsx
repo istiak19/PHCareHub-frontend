@@ -52,13 +52,13 @@ const LoginForm = () => {
                     const { role } = authStatus.user;
                     switch (role) {
                         case "ADMIN":
-                            router.push("/dashboard/admin");
+                            router.push("/admin/dashboard");
                             break;
                         case "DOCTOR":
-                            router.push("/dashboard/doctor");
+                            router.push("/doctor/dashboard");
                             break;
                         case "PATIENT":
-                            router.push("/dashboard/patient");
+                            router.push("/patient/dashboard");
                             break;
                         default:
                             router.push("/");
