@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import logo from "../../../public/logo.png";
@@ -18,8 +17,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ModeToggle } from "../ui/modeToggle";
-import checkAuthStatus from "@/utility/auth";
-import { useEffect, useState } from "react";
 import logoutUser from "@/utility/logout";
 import { toast } from "react-toastify";
 import { UseUser } from "@/Providers/UserProvider";
@@ -34,18 +31,7 @@ const navigationLinks = [
 
 export default function Navbar() {
   const pathname = usePathname();
-  const [auth, setAuth] = useState<{ isAuthenticated: boolean; user: any | null }>({ isAuthenticated: false, user: null });
-
-  useEffect(() => {
-    const check = async () => {
-      const result = await checkAuthStatus();
-      setAuth(result);
-    };
-    check();
-  }, []);
-
-  const {user}= UseUser();
-  console.log(user)
+  const { isAuthenticated, user, setAuth } = UseUser();
 
   const handLogout = async () => {
     const res = await logoutUser();
@@ -60,13 +46,12 @@ export default function Navbar() {
     }
   };
 
-  // Add role-based dashboard route dynamically
-  const roleDashboardLink = auth.isAuthenticated
-    ? auth.user?.role === "ADMIN"
+  const roleDashboardLink = isAuthenticated
+    ? user?.role === "ADMIN"
       ? { href: "/admin/dashboard", label: "Admin Dashboard" }
-      : auth.user?.role === "DOCTOR"
+      : user?.role === "DOCTOR"
         ? { href: "/doctor/dashboard", label: "Doctor Dashboard" }
-        : auth.user?.role === "PATIENT"
+        : user?.role === "PATIENT"
           ? { href: "/patient/dashboard", label: "Patient Dashboard" }
           : null
     : null;
@@ -173,7 +158,7 @@ export default function Navbar() {
         <div className="flex items-center gap-2">
           <ModeToggle />
 
-          {auth.isAuthenticated ? (
+          {isAuthenticated ? (
             <Button
               onClick={handLogout}
               size="sm"

@@ -27,8 +27,6 @@ export const UserProvider = ({ initialUser, children }: { initialUser?: AuthResp
     user: initialUser?.user ?? null,
   });
 
-  console.log(auth)
-
   useEffect(() => {
     const revalidateUser = async () => {
       try {
