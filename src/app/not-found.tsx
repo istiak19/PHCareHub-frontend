@@ -35,7 +35,7 @@ export default function NotFound() {
 
             {/* Footer */}
             <p className="mt-10 text-sm text-gray-50 dark:text-gray-400">
-                &copy; {new Date().getFullYear()} phCareHub. All rights reserved.
+                &copy; {new Date().getFullYear()} PHCareHub. All rights reserved.
             </p>
         </div>
     );

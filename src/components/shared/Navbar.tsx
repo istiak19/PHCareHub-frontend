@@ -63,11 +63,11 @@ export default function Navbar() {
   // Add role-based dashboard route dynamically
   const roleDashboardLink = auth.isAuthenticated
     ? auth.user?.role === "ADMIN"
-      ? { href: "/dashboard/admin", label: "Admin Dashboard" }
+      ? { href: "/admin/dashboard", label: "Admin Dashboard" }
       : auth.user?.role === "DOCTOR"
-        ? { href: "/dashboard/doctor", label: "Doctor Dashboard" }
+        ? { href: "/doctor/dashboard", label: "Doctor Dashboard" }
         : auth.user?.role === "PATIENT"
-          ? { href: "/dashboard/patient", label: "Patient Dashboard" }
+          ? { href: "/patient/dashboard", label: "Patient Dashboard" }
           : null
     : null;
 
