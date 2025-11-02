@@ -33,7 +33,7 @@ type LoginFormInputs = z.infer<typeof loginSchema>;
 
 const LoginForm = () => {
     const router = useRouter();
-    const { setUser } = UseUser();
+    const { setAuth } = UseUser();
     const [showPassword, setShowPassword] = useState(false);
 
     const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<LoginFormInputs>({ resolver: zodResolver(loginSchema) });
@@ -49,7 +49,7 @@ const LoginForm = () => {
                 toast.success(`Welcome back, ${loginData.email.split("@")[0]}!`);
 
                 const authStatus = await checkAuthStatus();
-                setUser(authStatus.user);
+                setAuth(authStatus);
 
                 if (authStatus.isAuthenticated && authStatus.user) {
                     const { role } = authStatus.user;

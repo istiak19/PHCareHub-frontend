@@ -42,10 +42,17 @@ export interface AISuggestionPayload {
     symptoms: string;
 };
 
-export interface userInterface {
+export interface UserInterface {
     id: string;
+    name: string;
     email: string;
     role: "ADMIN" | "DOCTOR" | "PATIENT";
-    exp: number;
-    iat: number;
+    profilePhoto?: string;
+    exp?: number;
+    iat?: number;
+};
+
+export interface AuthResponse {
+    isAuthenticated: boolean;
+    user: UserInterface | null;
 };
