@@ -2,21 +2,16 @@
 
 import { useGetAllDoctors, useDeleteDoctor } from "@/hooks/useDoctor";
 import { toast } from "react-toastify";
-import {
-    Table,
-    TableBody,
-    TableCaption,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from "@/components/ui/table";
+import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Loader2, Trash2 } from "lucide-react";
+import { Loader2, Trash2, Pencil } from "lucide-react";
 import { DoctorInterface } from "@/types/doctor";
+import Loader from "@/components/shared/Loader";
+import { useRouter } from "next/navigation";
 
 const DoctorTable = () => {
+    const router = useRouter();
     const { data: doctors, isLoading } = useGetAllDoctors();
     const { mutate: deleteDoctor, isPending } = useDeleteDoctor();
 
@@ -29,14 +24,13 @@ const DoctorTable = () => {
         }
     };
 
+    const handleEdit = (id: string) => {
+        router.push(`/admin/dashboard/manage-doctors/edit/${id}`);
+    };
+
     if (isLoading) {
-        return (
-            <div className="flex items-center justify-center h-64">
-                <Loader2 className="animate-spin text-primary w-6 h-6 mr-2" />
-                <p className="text-gray-500">Loading doctors...</p>
-            </div>
-        );
-    }
+        return <Loader />;
+    };
 
     return (
         <Card className="m-6 shadow-lg">
@@ -48,37 +42,51 @@ const DoctorTable = () => {
                     <TableCaption>All registered doctors in the system.</TableCaption>
                     <TableHeader>
                         <TableRow>
-                            <TableHead className="w-[40%]">Name</TableHead>
-                            <TableHead className="w-[40%]">Email</TableHead>
-                            <TableHead className="text-center">Action</TableHead>
+                            <TableHead className="w-[30%]">Name</TableHead>
+                            <TableHead className="w-[30%]">Email</TableHead>
+                            <TableHead className="text-center w-[40%]">Action</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {doctors.data?.length ? (
+                        {doctors?.data?.length ? (
                             doctors.data.map((doc: DoctorInterface) => (
                                 <TableRow key={doc.id}>
                                     <TableCell className="font-medium">{doc.name}</TableCell>
                                     <TableCell>{doc.email}</TableCell>
                                     <TableCell className="text-center">
-                                        <Button
-                                            variant="destructive"
-                                            size="sm"
-                                            onClick={() => handleDelete(doc.id)}
-                                            disabled={isPending}
-                                            className="flex items-center gap-2"
-                                        >
-                                            {isPending ? (
-                                                <>
-                                                    <Loader2 className="h-4 w-4 animate-spin" />
-                                                    Deleting...
-                                                </>
-                                            ) : (
-                                                <>
-                                                    <Trash2 className="h-4 w-4" />
-                                                    Delete
-                                                </>
-                                            )}
-                                        </Button>
+                                        <div className="flex justify-center gap-2">
+                                            {/* Edit Button */}
+                                            <Button
+                                                variant="outline"
+                                                size="sm"
+                                                onClick={() => handleEdit(doc.id)}
+                                                className="flex items-center gap-2"
+                                            >
+                                                <Pencil className="h-4 w-4" />
+                                                Edit
+                                            </Button>
+
+                                            {/* Delete Button */}
+                                            <Button
+                                                variant="destructive"
+                                                size="sm"
+                                                onClick={() => handleDelete(doc.id)}
+                                                disabled={isPending}
+                                                className="flex items-center gap-2"
+                                            >
+                                                {isPending ? (
+                                                    <>
+                                                        <Loader2 className="h-4 w-4 animate-spin" />
+                                                        Deleting...
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <Trash2 className="h-4 w-4" />
+                                                        Delete
+                                                    </>
+                                                )}
+                                            </Button>
+                                        </div>
                                     </TableCell>
                                 </TableRow>
                             ))
