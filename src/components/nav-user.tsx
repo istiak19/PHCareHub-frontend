@@ -32,6 +32,7 @@ import { UserInterface } from "@/types";
 import logoutUser from "@/utility/logout"
 import { toast } from "react-toastify"
 import { UseUser } from "@/Providers/UserProvider"
+import Link from "next/link"
 
 interface NavUserProps {
   user: UserInterface;
@@ -97,10 +98,12 @@ export function NavUser({ user }: NavUserProps) {
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <IconUserCircle />
-                Account
-              </DropdownMenuItem>
+              <Link href={`/profile/${user.id}`}>
+                <DropdownMenuItem>
+                  <IconUserCircle />
+                  Account
+                </DropdownMenuItem>
+              </Link>
               <DropdownMenuItem>
                 <IconCreditCard />
                 Billing
