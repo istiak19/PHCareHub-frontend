@@ -17,7 +17,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ModeToggle } from "../ui/modeToggle";
-import logoutUser from "@/utility/logout";
+import logoutUser from "@/services/auth/logout";
 import { toast } from "react-toastify";
 import { UseUser } from "@/Providers/UserProvider";
 

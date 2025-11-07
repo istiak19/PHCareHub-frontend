@@ -1,3 +1,5 @@
+"use server";
+
 import { ILogin } from "@/types";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */

@@ -10,7 +10,7 @@ import { motion } from "framer-motion";
 import { LargeSparkleIcon, SparkleIcon } from "@/assets/icons/SparkleIcon";
 import { toast } from "react-toastify";
 import { HeroProps } from "@/types";
-import aiSuggestions from "@/utility/aiSuggestions";
+import aiSuggestions from "@/services/aiSuggestions";
 
 const SPARKLE_COUNT = 20;
 
