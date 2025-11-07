@@ -19,11 +19,10 @@ import checkAuthStatus from "@/utility/auth";
 import { UseUser } from "@/Providers/UserProvider";
 import { loginUser } from "@/services/auth/loginUser";
 
-export default function LoginForm() {
+const LoginForm = () => {
     const router = useRouter();
     const { setAuth } = UseUser();
     const [showPassword, setShowPassword] = useState(false);
-
     const [state, formAction, isPending] = useActionState(loginUser, null);
 
     // ✅ Handle login result
@@ -133,3 +132,5 @@ export default function LoginForm() {
         </motion.form>
     );
 };
+
+export default LoginForm;
