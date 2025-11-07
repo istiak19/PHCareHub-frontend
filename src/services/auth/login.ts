@@ -15,6 +15,7 @@ const loginUser = async (payload: ILogin) => {
         });
 
         const data = await res.json();
+        console.log("login server", data);
 
         return data;
     } catch (err: any) {

@@ -34,7 +34,7 @@ const Register = () => {
                 transition={{ duration: 0.8 }}
                 className="w-full md:w-1/2 flex justify-center px-6"
             >
-                <Card className="w-full max-w-md border-none shadow-xl bg-white dark:bg-gray-900 rounded-2xl">
+                <Card className="w-full max-w-lg border-none shadow-xl bg-white dark:bg-gray-900 rounded-2xl">
                     <Link href="/" className="flex items-center mb-4 group">
                         <div className="relative w-12 h-12 overflow-hidden group-hover:scale-105 transition-transform duration-200">
                             <Image src={logo} alt="Logo" fill />
