@@ -29,7 +29,7 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar"
 import { UserInterface } from "@/types";
-import logoutUser from "@/utility/logout"
+import logoutUser from "@/services/auth/logout"
 import { toast } from "react-toastify"
 import { UseUser } from "@/Providers/UserProvider"
 import Link from "next/link"

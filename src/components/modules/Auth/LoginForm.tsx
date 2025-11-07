@@ -11,7 +11,7 @@ import { Label } from "@/components/ui/label";
 import { Eye, EyeOff, LogIn } from "lucide-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import loginUser from "@/utility/login";
+import loginUser from "@/services/auth/login";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import checkAuthStatus from "@/utility/auth";

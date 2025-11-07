@@ -1,4 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+"use server";
+
 import { AISuggestionPayload } from "@/types";
 
 const aiSuggestions = async (payload: AISuggestionPayload) => {
