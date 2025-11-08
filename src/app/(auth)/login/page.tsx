@@ -9,7 +9,7 @@ import LoginForm from "@/components/modules/Auth/LoginForm";
 
 const Login = () => {
     return (
-        <section className="flex flex-col md:flex-row items-center justify-center bg-gray-50 dark:bg-[#0f172a]">
+        <section className="flex flex-col md:flex-row items-center justify-center bg-gray-50 dark:bg-black">
             {/* Left side image */}
             <motion.div
                 initial={{ opacity: 0, x: -40 }}
@@ -34,7 +34,7 @@ const Login = () => {
                 transition={{ duration: 0.8 }}
                 className="w-full md:w-1/2 flex justify-center px-6"
             >
-                <Card className="w-full max-w-md border-none shadow-xl bg-white dark:bg-gray-900 rounded-2xl">
+                <Card className="w-full max-w-md border-none shadow-xl bg-white dark:bg-black rounded-2xl">
                     <Link href="/" className="flex items-center mb-4 group">
                         <div className="relative w-12 h-12 overflow-hidden group-hover:scale-105 transition-transform duration-200">
                             <Image src={logo} alt="Logo" fill />

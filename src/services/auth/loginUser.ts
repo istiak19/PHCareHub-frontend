@@ -2,6 +2,8 @@
 "use server";
 
 import { z } from "zod";
+import { parse } from "cookie";
+import { cookies } from "next/headers";
 
 const loginSchema = z.object({
     email: z.string().email("Invalid email address"),
@@ -10,6 +12,10 @@ const loginSchema = z.object({
 
 export const loginUser = async (_currentState: any, formData: FormData): Promise<any> => {
     try {
+        // const redirectTo = formData.get('redirect') || null;
+        let accessTokenObject: null | any = null;
+        let refreshTokenObject: null | any = null;
+
         const data = {
             email: formData.get("email"),
             password: formData.get("password"),
@@ -33,6 +39,47 @@ export const loginUser = async (_currentState: any, formData: FormData): Promise
                 "Content-Type": "application/json"
             },
             credentials: "include",
+        });
+
+        const setCookies = res.headers.getSetCookie();
+        if (setCookies && setCookies.length > 0) {
+            setCookies.forEach((cookie: string) => {
+                const parsedCookie = parse(cookie);
+                if (parsedCookie['accessToken']) {
+                    accessTokenObject = parsedCookie;
+                };
+                if (parsedCookie['refreshToken']) {
+                    refreshTokenObject = parsedCookie;
+                };
+            });
+        } else {
+            throw new Error("Not cookies");
+        };
+
+        if (!accessTokenObject) {
+            throw new Error("Tokens not found in cookies");
+        };
+
+        if (!refreshTokenObject) {
+            throw new Error("Tokens not found in cookies");
+        };
+
+        const cookieStore = await cookies();
+
+        cookieStore.set("accessToken", accessTokenObject.accessToken, {
+            secure: true,
+            httpOnly: true,
+            maxAge: parseInt(accessTokenObject['Max-Age']) || 1000 * 60 * 60,
+            path: accessTokenObject.Path || "/",
+            sameSite: accessTokenObject['SameSite'] || "none",
+        });
+
+        cookieStore.set("refreshToken", refreshTokenObject.refreshToken, {
+            secure: true,
+            httpOnly: true,
+            maxAge: parseInt(refreshTokenObject['Max-Age']) || 1000 * 60 * 60 * 24 * 90,
+            path: refreshTokenObject.Path || "/",
+            sameSite: refreshTokenObject['SameSite'] || "none",
         });
 
         const result = await res.json();
