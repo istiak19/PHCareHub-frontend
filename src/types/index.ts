@@ -1,3 +1,12 @@
+export type UserRole = "ADMIN" | "DOCTOR" | "PATIENT";
+
+// exact : ["/my-profile", "settings"]
+// patterns: [/^\/dashboard/, /^\/patient/], // Routes starting with /dashboard/* /patient/*
+export type RouteConfig = {
+    exact: string[],
+    patterns: RegExp[],
+};
+
 export interface StepCardProps {
     icon: React.ElementType;
     title: string;
