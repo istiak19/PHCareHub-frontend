@@ -12,51 +12,13 @@ import {
 } from "@/components/ui/field";
 import { Eye, EyeOff } from "lucide-react";
 import { motion } from "framer-motion";
-import { toast } from "react-toastify";
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import checkAuthStatus from "@/utility/auth";
-import { UseUser } from "@/Providers/UserProvider";
+import { useState } from "react";
 import { loginUser } from "@/services/auth/loginUser";
 
-const LoginForm = () => {
-    const router = useRouter();
-    const { setAuth } = UseUser();
+const LoginForm = ({ redirect }: { redirect?: string }) => {
     const [showPassword, setShowPassword] = useState(false);
     const [state, formAction, isPending] = useActionState(loginUser, null);
 
-    // ✅ Handle login result
-    useEffect(() => {
-        if (state?.success) {
-            toast.success("Login successful!");
-
-            (async () => {
-                const authStatus = await checkAuthStatus();
-                setAuth(authStatus);
-
-                if (authStatus.isAuthenticated && authStatus.user) {
-                    const { role } = authStatus.user;
-                    switch (role) {
-                        case "ADMIN":
-                            router.push("/admin/dashboard");
-                            break;
-                        case "DOCTOR":
-                            router.push("/doctor/dashboard");
-                            break;
-                        case "PATIENT":
-                            router.push("/patient/dashboard");
-                            break;
-                        default:
-                            router.push("/");
-                    }
-                }
-            })();
-        } else if (state?.message && !state.success) {
-            toast.error(state.message);
-        }
-    }, [state, router, setAuth]);
-
-    // ✅ Error helper
     const getError = (fieldName: string) => {
         if (state && state.errors) {
             const error = state.errors.find((err: any) => err.field === fieldName);
@@ -74,6 +36,7 @@ const LoginForm = () => {
             transition={{ duration: 0.5 }}
             className="max-w-md mx-auto w-full p-8"
         >
+            <input type="hidden" name="redirect" value={redirect} />
             <FieldGroup>
                 {/* Email */}
                 <Field>

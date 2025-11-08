@@ -4,6 +4,10 @@
 import { z } from "zod";
 import { parse } from "cookie";
 import { cookies } from "next/headers";
+import jwt, { JwtPayload } from "jsonwebtoken";
+import { UserRole } from "@/types";
+import { getDefaultDashboardRoute, isValidRedirectForRole } from "@/utility/helper";
+import { redirect } from "next/navigation";
 
 const loginSchema = z.object({
     email: z.string().email("Invalid email address"),
@@ -12,7 +16,8 @@ const loginSchema = z.object({
 
 export const loginUser = async (_currentState: any, formData: FormData): Promise<any> => {
     try {
-        // const redirectTo = formData.get('redirect') || null;
+        const redirectTo = formData.get('redirect') || null;
+        console.log("to-->", redirectTo);
         let accessTokenObject: null | any = null;
         let refreshTokenObject: null | any = null;
 
@@ -30,7 +35,7 @@ export const loginUser = async (_currentState: any, formData: FormData): Promise
                     message: i.message,
                 })),
             };
-        }
+        };
 
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
             method: "POST",
@@ -42,6 +47,7 @@ export const loginUser = async (_currentState: any, formData: FormData): Promise
         });
 
         const setCookies = res.headers.getSetCookie();
+
         if (setCookies && setCookies.length > 0) {
             setCookies.forEach((cookie: string) => {
                 const parsedCookie = parse(cookie);
@@ -82,15 +88,27 @@ export const loginUser = async (_currentState: any, formData: FormData): Promise
             sameSite: refreshTokenObject['SameSite'] || "none",
         });
 
-        const result = await res.json();
+        const verifiedToken: JwtPayload | string = jwt.verify(accessTokenObject.accessToken, process.env.JWT_SECRET as string);
 
-        if (!res.ok) {
-            return { success: false, message: result.message || "Login failed" };
+        if (typeof verifiedToken === "string") {
+            throw new Error("Invalid token");
+        };
+
+        const userRole: UserRole = verifiedToken.role;
+        if (redirectTo) {
+            const requestedPath = redirectTo.toString();
+            if (isValidRedirectForRole(requestedPath, userRole)) {
+                redirect(requestedPath);
+            } else {
+                redirect(getDefaultDashboardRoute(userRole));
+            };
+        };
+
+    } catch (error: any) {
+        // Re-throw NEXT_REDIRECT errors so Next.js can handle them
+        if (error?.digest?.startsWith('NEXT_REDIRECT')) {
+            throw error;
         }
-
-        return result;
-
-    } catch (error) {
         console.error("Login Action Error:", error);
         return { success: false, message: "Something went wrong" };
     }
