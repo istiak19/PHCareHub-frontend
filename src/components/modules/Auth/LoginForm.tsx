@@ -74,7 +74,7 @@ const LoginForm = () => {
             transition={{ duration: 0.5 }}
             className="max-w-md mx-auto w-full p-8"
         >
-            <FieldGroup className="space-y-3">
+            <FieldGroup>
                 {/* Email */}
                 <Field>
                     <FieldLabel htmlFor="email">Email</FieldLabel>
