@@ -59,3 +59,14 @@ export const getDefaultDashboardRoute = (role: UserRole): string => {
         return "/";
     };
 };
+
+export const isValidRedirectForRole = (redirectPath: string, role: UserRole): boolean => {
+    const routeOwner = getRouteOwner(redirectPath);
+    if (routeOwner === null || routeOwner === "COMMON") {
+        return true;
+    };
+    if (routeOwner === role) {
+        return true;
+    };
+    return false;
+};
