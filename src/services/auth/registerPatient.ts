@@ -88,7 +88,7 @@ export const registerPatient = async (_currentState: any, formData: FormData): P
         if (error?.digest?.startsWith('NEXT_REDIRECT')) {
             throw error;
         };
-        console.error("Registration error:", error);
-        return { error: "Registration failed" };
+        console.log(error);
+        return { success: false, message: `${process.env.NODE_ENV === 'development' ? error.message : "Registration Failed. Please try again."}` };
     }
 };
