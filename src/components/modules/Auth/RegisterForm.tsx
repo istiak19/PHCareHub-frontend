@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Field, FieldDescription, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
@@ -10,6 +10,7 @@ import Link from "next/link";
 import { useActionState } from "react";
 import { motion } from "framer-motion";
 import { Eye, EyeOff } from "lucide-react";
+import { toast } from "react-toastify";
 
 const RegisterForm = () => {
     const [state, formAction, isPending] = useActionState(registerPatient, null);
@@ -26,6 +27,12 @@ const RegisterForm = () => {
             return null;
         }
     };
+
+    useEffect(() => {
+        if (state && !state.success && state.message) {
+            toast.error(state.message);
+        };
+    }, [state]);
 
     return (
         <motion.form

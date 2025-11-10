@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -14,6 +14,7 @@ import { Eye, EyeOff } from "lucide-react";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { loginUser } from "@/services/auth/loginUser";
+import { toast } from "react-toastify";
 
 const LoginForm = ({ redirect }: { redirect?: string }) => {
     const [showPassword, setShowPassword] = useState(false);
@@ -26,7 +27,13 @@ const LoginForm = ({ redirect }: { redirect?: string }) => {
         } else {
             return null;
         };
-    }
+    };
+
+    useEffect(() => {
+        if (state && !state.success && state.message) {
+            toast.error(state.message);
+        };
+    }, [state]);
 
     return (
         <motion.form
