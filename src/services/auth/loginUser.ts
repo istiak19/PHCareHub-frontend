@@ -3,11 +3,11 @@
 
 import { z } from "zod";
 import { parse } from "cookie";
-import { cookies } from "next/headers";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { UserRole } from "@/types";
 import { getDefaultDashboardRoute, isValidRedirectForRole } from "@/utility/helper";
 import { redirect } from "next/navigation";
+import { setCookies } from "@/utility/tokenHandlers";
 
 const loginSchema = z.object({
     email: z.string().email("Invalid email address"),
@@ -27,7 +27,7 @@ export const loginUser = async (_currentState: any, formData: FormData): Promise
         };
 
         const validatedFields = loginSchema.safeParse(data);
-        
+
         if (!validatedFields.success) {
             return {
                 success: false,
@@ -54,9 +54,9 @@ export const loginUser = async (_currentState: any, formData: FormData): Promise
         };
 
         // Get cookies from response
-        const setCookies = res.headers.getSetCookie();
-        if (setCookies && setCookies.length > 0) {
-            setCookies.forEach((cookie: string) => {
+        const setCookieHeaders = res.headers.getSetCookie();
+        if (setCookieHeaders && setCookieHeaders.length > 0) {
+            setCookieHeaders.forEach((cookie: string) => {
                 const parsedCookie = parse(cookie);
                 if (parsedCookie["accessToken"]) accessTokenObject = parsedCookie;
                 if (parsedCookie["refreshToken"]) refreshTokenObject = parsedCookie;
@@ -68,8 +68,7 @@ export const loginUser = async (_currentState: any, formData: FormData): Promise
         };
 
         // Set cookies for frontend
-        const cookieStore = await cookies();
-        cookieStore.set("accessToken", accessTokenObject.accessToken, {
+        await setCookies("accessToken", accessTokenObject.accessToken, {
             secure: true,
             httpOnly: true,
             maxAge: parseInt(accessTokenObject["Max-Age"]) || 60 * 60,
@@ -77,7 +76,7 @@ export const loginUser = async (_currentState: any, formData: FormData): Promise
             sameSite: "lax",
         });
 
-        cookieStore.set("refreshToken", refreshTokenObject.refreshToken, {
+        await setCookies("refreshToken", refreshTokenObject.refreshToken, {
             secure: true,
             httpOnly: true,
             maxAge: parseInt(refreshTokenObject["Max-Age"]) || 60 * 60 * 24 * 90,
