@@ -10,6 +10,9 @@ export async function proxy(request: NextRequest) {
     const pathname = request.nextUrl.pathname;
     const accessToken = request.cookies.get("accessToken")?.value || null;
 
+    // way-2
+    // const accessToken = await getCookies("accessToken") || null;
+
     let userRole: UserRole | null = null;
     if (accessToken) {
         const verifiedToken: JwtPayload | string = jwt.verify(accessToken, process.env.JWT_SECRET as string);

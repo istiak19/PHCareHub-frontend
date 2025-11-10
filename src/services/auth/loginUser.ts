@@ -16,7 +16,7 @@ const loginSchema = z.object({
 
 export const loginUser = async (_currentState: any, formData: FormData): Promise<any> => {
     try {
-        const redirectTo = formData.get("redirect")?.toString() || null;
+        const redirectTo = formData.get("redirect") || null;
         let accessTokenObject: null | any = null;
         let refreshTokenObject: null | any = null;
 
@@ -95,12 +95,22 @@ export const loginUser = async (_currentState: any, formData: FormData): Promise
         const userRole: UserRole = verifiedToken.role;
 
         // Determine final redirect
-        const finalRedirect = redirectTo && isValidRedirectForRole(redirectTo, userRole) ? redirectTo : getDefaultDashboardRoute(userRole);
-
-        redirect(finalRedirect);
+        if (redirectTo) {
+            const requestedPath = redirectTo.toString();
+            if (isValidRedirectForRole(requestedPath, userRole)) {
+                redirect(`${requestedPath}?loggedIn=true`);
+            } else {
+                redirect(`${getDefaultDashboardRoute(userRole)}?loggedIn=true`);
+            };
+        } else {
+            redirect(`${getDefaultDashboardRoute(userRole)}?loggedIn=true`);
+        };
 
     } catch (error: any) {
-        if (error?.digest?.startsWith("NEXT_REDIRECT")) throw error;
+        // Re-throw NEXT_REDIRECT errors so Next.js can handle them
+        if (error?.digest?.startsWith('NEXT_REDIRECT')) {
+            throw error;
+        };
         console.error("Login Action Error:", error);
         return { success: false, message: "Something went wrong" };
     };
