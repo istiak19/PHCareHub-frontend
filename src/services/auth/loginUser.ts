@@ -3,11 +3,11 @@
 
 import { z } from "zod";
 import { parse } from "cookie";
-import { cookies } from "next/headers";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { UserRole } from "@/types";
 import { getDefaultDashboardRoute, isValidRedirectForRole } from "@/utility/helper";
 import { redirect } from "next/navigation";
+import { setCookies } from "@/utility/tokenHandlers";
 
 const loginSchema = z.object({
     email: z.string().email("Invalid email address"),
@@ -16,7 +16,7 @@ const loginSchema = z.object({
 
 export const loginUser = async (_currentState: any, formData: FormData): Promise<any> => {
     try {
-        const redirectTo = formData.get("redirect")?.toString() || null;
+        const redirectTo = formData.get("redirect") || null;
         let accessTokenObject: null | any = null;
         let refreshTokenObject: null | any = null;
 
@@ -27,7 +27,7 @@ export const loginUser = async (_currentState: any, formData: FormData): Promise
         };
 
         const validatedFields = loginSchema.safeParse(data);
-        
+
         if (!validatedFields.success) {
             return {
                 success: false,
@@ -54,9 +54,9 @@ export const loginUser = async (_currentState: any, formData: FormData): Promise
         };
 
         // Get cookies from response
-        const setCookies = res.headers.getSetCookie();
-        if (setCookies && setCookies.length > 0) {
-            setCookies.forEach((cookie: string) => {
+        const setCookieHeaders = res.headers.getSetCookie();
+        if (setCookieHeaders && setCookieHeaders.length > 0) {
+            setCookieHeaders.forEach((cookie: string) => {
                 const parsedCookie = parse(cookie);
                 if (parsedCookie["accessToken"]) accessTokenObject = parsedCookie;
                 if (parsedCookie["refreshToken"]) refreshTokenObject = parsedCookie;
@@ -68,8 +68,7 @@ export const loginUser = async (_currentState: any, formData: FormData): Promise
         };
 
         // Set cookies for frontend
-        const cookieStore = await cookies();
-        cookieStore.set("accessToken", accessTokenObject.accessToken, {
+        await setCookies("accessToken", accessTokenObject.accessToken, {
             secure: true,
             httpOnly: true,
             maxAge: parseInt(accessTokenObject["Max-Age"]) || 60 * 60,
@@ -77,7 +76,7 @@ export const loginUser = async (_currentState: any, formData: FormData): Promise
             sameSite: "lax",
         });
 
-        cookieStore.set("refreshToken", refreshTokenObject.refreshToken, {
+        await setCookies("refreshToken", refreshTokenObject.refreshToken, {
             secure: true,
             httpOnly: true,
             maxAge: parseInt(refreshTokenObject["Max-Age"]) || 60 * 60 * 24 * 90,
@@ -96,12 +95,22 @@ export const loginUser = async (_currentState: any, formData: FormData): Promise
         const userRole: UserRole = verifiedToken.role;
 
         // Determine final redirect
-        const finalRedirect = redirectTo && isValidRedirectForRole(redirectTo, userRole) ? redirectTo : getDefaultDashboardRoute(userRole);
-
-        redirect(finalRedirect);
+        if (redirectTo) {
+            const requestedPath = redirectTo.toString();
+            if (isValidRedirectForRole(requestedPath, userRole)) {
+                redirect(`${requestedPath}?loggedIn=true`);
+            } else {
+                redirect(`${getDefaultDashboardRoute(userRole)}?loggedIn=true`);
+            };
+        } else {
+            redirect(`${getDefaultDashboardRoute(userRole)}?loggedIn=true`);
+        };
 
     } catch (error: any) {
-        if (error?.digest?.startsWith("NEXT_REDIRECT")) throw error;
+        // Re-throw NEXT_REDIRECT errors so Next.js can handle them
+        if (error?.digest?.startsWith('NEXT_REDIRECT')) {
+            throw error;
+        };
         console.error("Login Action Error:", error);
         return { success: false, message: "Something went wrong" };
     };

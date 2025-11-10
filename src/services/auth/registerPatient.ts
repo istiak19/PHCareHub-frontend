@@ -2,6 +2,7 @@
 "use server";
 
 import z from "zod";
+import { loginUser } from "./loginUser";
 
 const registerValidationZodSchema = z
     .object({
@@ -77,8 +78,16 @@ export const registerPatient = async (_currentState: any, formData: FormData): P
             };
         };
 
+        if (data.success) {
+            await loginUser(_currentState, formData);
+        };
+
         return data;
-    } catch (error) {
+    } catch (error: any) {
+        // Re-throw NEXT_REDIRECT errors so Next.js can handle them
+        if (error?.digest?.startsWith('NEXT_REDIRECT')) {
+            throw error;
+        };
         console.error("Registration error:", error);
         return { error: "Registration failed" };
     }
