@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { useActionState, useEffect } from "react";
+import { useActionState, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -12,7 +12,6 @@ import {
 } from "@/components/ui/field";
 import { Eye, EyeOff } from "lucide-react";
 import { motion } from "framer-motion";
-import { useState } from "react";
 import { loginUser } from "@/services/auth/loginUser";
 import { toast } from "react-toastify";
 
@@ -20,19 +19,11 @@ const LoginForm = ({ redirect }: { redirect?: string }) => {
     const [showPassword, setShowPassword] = useState(false);
     const [state, formAction, isPending] = useActionState(loginUser, null);
 
-    const getError = (fieldName: string) => {
-        if (state && state.errors) {
-            const error = state.errors.find((err: any) => err.field === fieldName);
-            return error ? error.message : null;
-        } else {
-            return null;
-        };
-    };
+    const getError = (fieldName: string) =>
+        state?.errors?.find((err: any) => err.field === fieldName)?.message ?? null;
 
     useEffect(() => {
-        if (state && !state.success && state.message) {
-            toast.error(state.message);
-        };
+        if (state && !state.success && state.message) toast.error(state.message);
     }, [state]);
 
     return (
@@ -41,9 +32,10 @@ const LoginForm = ({ redirect }: { redirect?: string }) => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="max-w-md mx-auto w-full p-8"
+            className="max-w-md mx-auto w-full space-y-5"
         >
             <input type="hidden" name="redirect" value={redirect} />
+
             <FieldGroup>
                 {/* Email */}
                 <Field>
@@ -54,9 +46,10 @@ const LoginForm = ({ redirect }: { redirect?: string }) => {
                         type="email"
                         placeholder="you@example.com"
                         className="mt-1"
+                        required
                     />
                     {getError("email") && (
-                        <FieldDescription className="text-red-600">
+                        <FieldDescription className="text-red-600 text-sm">
                             {getError("email")}
                         </FieldDescription>
                     )}
@@ -72,17 +65,18 @@ const LoginForm = ({ redirect }: { redirect?: string }) => {
                             type={showPassword ? "text" : "password"}
                             placeholder="••••••••"
                             className="pr-10 mt-1"
+                            required
                         />
                         <button
                             type="button"
                             onClick={() => setShowPassword(!showPassword)}
-                            className="absolute right-3 top-2.5 text-gray-500 hover:text-gray-700"
+                            className="absolute right-3 top-3 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
                         >
                             {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                         </button>
                     </div>
                     {getError("password") && (
-                        <FieldDescription className="text-red-600">
+                        <FieldDescription className="text-red-600 text-sm">
                             {getError("password")}
                         </FieldDescription>
                     )}
@@ -93,7 +87,7 @@ const LoginForm = ({ redirect }: { redirect?: string }) => {
                     <Button
                         type="submit"
                         disabled={isPending}
-                        className="w-full bg-blue-600 hover:bg-blue-700 text-white py-5 rounded-xl font-semibold transition-all duration-300 cursor-pointer"
+                        className="w-full bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 text-white py-5 rounded-xl font-semibold transition-all duration-300 cursor-pointer"
                     >
                         {isPending ? "Logging in..." : "Login"}
                     </Button>
