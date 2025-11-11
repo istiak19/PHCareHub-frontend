@@ -4,7 +4,9 @@ import "./globals.css";
 import { ThemeProvider } from "next-themes";
 import { ToastContainer } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
-import { UserProvider } from "@/Providers/UserProvider";
+import LoginSuccessToast from "@/components/shared/LoginSuccessToast";
+import LogoutSuccessToast from "@/components/shared/LogoutSuccessToast";
+import { Toaster } from "sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,17 +29,18 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-          <UserProvider>
-            <ThemeProvider
-              attribute="class"
-              defaultTheme="system"
-              enableSystem
-              disableTransitionOnChange
-            >
-              {children}
-              <ToastContainer />
-            </ThemeProvider>
-          </UserProvider>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          {children}
+          <Toaster position="top-right" richColors />
+          <ToastContainer />
+          <LoginSuccessToast />
+          <LogoutSuccessToast />
+        </ThemeProvider>
       </body>
     </html>
   );

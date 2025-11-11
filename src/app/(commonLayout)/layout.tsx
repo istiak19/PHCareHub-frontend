@@ -1,10 +1,10 @@
 import Footer from "@/components/shared/Footer";
-import Navbar from "@/components/shared/Navbar";
+import NavbarServer from "@/components/shared/Navbar.server";
 
 const CommonLayout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
     return (
         <div>
-            <Navbar />
+            <NavbarServer />
             <main className="min-h-dvh">
                 {children}
             </main>
