@@ -61,6 +61,12 @@ export interface UserInterface {
     iat?: number;
 };
 
+export interface UserInfo {
+    name: string;
+    email: string;
+    role: UserRole;
+}
+
 export interface AuthResponse {
     isAuthenticated: boolean;
     user: UserInterface | null;
