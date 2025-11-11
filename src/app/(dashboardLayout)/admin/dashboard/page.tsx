@@ -13,7 +13,7 @@ interface MetaData {
   totalRevenue: { _sum: { amount: number } };
   barChartData: { month: string; count: number }[];
   pieChartData: { status: string; count: number }[];
-}
+};
 
 const COLORS = ["#4ade80", "#3b82f6", "#facc15", "#ef4444", "#a78bfa"]; // Tailwind colors
 

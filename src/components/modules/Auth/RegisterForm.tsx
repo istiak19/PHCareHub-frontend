@@ -14,24 +14,14 @@ import { toast } from "react-toastify";
 
 const RegisterForm = () => {
     const [state, formAction, isPending] = useActionState(registerPatient, null);
-
-    // ✅ Show/hide password state
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-    const getFieldError = (fieldName: string) => {
-        if (state && state.errors) {
-            const error = state.errors.find((err: any) => err.field === fieldName);
-            return error ? error.message : null;
-        } else {
-            return null;
-        }
-    };
+    const getFieldError = (field: string) =>
+        state?.errors?.find((err: any) => err.field === field)?.message ?? null;
 
     useEffect(() => {
-        if (state && !state.success && state.message) {
-            toast.error(state.message);
-        };
+        if (state && !state.success && state.message) toast.error(state.message);
     }, [state]);
 
     return (
@@ -89,7 +79,7 @@ const RegisterForm = () => {
                     <button
                         type="button"
                         onClick={() => setShowPassword(!showPassword)}
-                        className="absolute left-50 top-10 text-gray-500"
+                        className="absolute left-40 top-10 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
                     >
                         {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                     </button>
@@ -113,7 +103,7 @@ const RegisterForm = () => {
                     <button
                         type="button"
                         onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                        className="absolute left-110 top-10 text-gray-500"
+                        className="absolute left-96 top-10 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
                     >
                         {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                     </button>
@@ -126,7 +116,7 @@ const RegisterForm = () => {
             </div>
 
             {/* Submit Button */}
-            <div className="mt-6 flex flex-col items-center">
+            <div className="mt-4 flex flex-col items-center">
                 <Button
                     type="submit"
                     disabled={isPending}
