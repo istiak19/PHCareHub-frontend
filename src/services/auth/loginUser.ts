@@ -8,6 +8,8 @@ import { UserRole } from "@/types";
 import { getDefaultDashboardRoute, isValidRedirectForRole } from "@/utility/helper";
 import { redirect } from "next/navigation";
 import { setCookies } from "@/utility/tokenHandlers";
+import { serverFetch } from "@/lib/server-fetch";
+import { zodValidator } from "@/lib/zodValidator";
 
 const loginSchema = z.object({
     email: z.string().email("Invalid email address"),
@@ -26,32 +28,26 @@ export const loginUser = async (_currentState: any, formData: FormData): Promise
             password: formData.get("password"),
         };
 
-        const validatedFields = loginSchema.safeParse(data);
-
-        if (!validatedFields.success) {
-            return {
-                success: false,
-                errors: validatedFields.error.issues.map((i) => ({
-                    field: i.path[0],
-                    message: i.message,
-                })),
-            };
+        if (zodValidator(data, loginSchema).success === false) {
+            return zodValidator(data, loginSchema);
         };
 
+        const validatedPayload = zodValidator(data, loginSchema).data;
+
         // Call API
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
-            method: "POST",
-            body: JSON.stringify(validatedFields.data),
+        const res = await serverFetch.post(`/auth/login`, {
+            body: JSON.stringify(validatedPayload),
             headers: {
                 "Content-Type": "application/json",
             },
-            credentials: "include",
         });
 
         if (!res.ok) {
             const errorData = await res.json();
             return { success: false, message: errorData.message || "Login failed" };
         };
+
+        const result = await res.json();
 
         // Get cookies from response
         const setCookieHeaders = res.headers.getSetCookie();
@@ -93,6 +89,10 @@ export const loginUser = async (_currentState: any, formData: FormData): Promise
         if (typeof verifiedToken === "string") throw new Error("Invalid token");
 
         const userRole: UserRole = verifiedToken.role;
+
+        if (!result.success) {
+            throw new Error(result.message || "Login failed");
+        };
 
         // Determine final redirect
         if (redirectTo) {

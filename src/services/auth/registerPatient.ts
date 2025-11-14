@@ -3,6 +3,7 @@
 
 import z from "zod";
 import { loginUser } from "./loginUser";
+import { zodValidator } from "@/lib/zodValidator";
 
 const registerValidationZodSchema = z
     .object({
@@ -31,7 +32,7 @@ const registerValidationZodSchema = z
 
 export const registerPatient = async (_currentState: any, formData: FormData): Promise<any> => {
     try {
-        const validationData = {
+        const payload = {
             name: formData.get("name"),
             address: formData.get("address"),
             email: formData.get("email"),
@@ -40,24 +41,19 @@ export const registerPatient = async (_currentState: any, formData: FormData): P
         };
 
         // ✅ Validate input
-        const validatedFields = registerValidationZodSchema.safeParse(validationData);
-        if (!validatedFields.success) {
-            return {
-                success: false,
-                errors: validatedFields.error.issues.map((issue) => ({
-                    field: issue.path[0],
-                    message: issue.message,
-                })),
-            };
-        };
+        if (zodValidator(payload, registerValidationZodSchema).success === false) {
+            return zodValidator(payload, registerValidationZodSchema);
+        }
+
+        const validatedPayload: any = zodValidator(payload, registerValidationZodSchema).data;
 
         // ✅ Prepare data for backend
         const registerData = {
-            password: formData.get("password"),
+            password: validatedPayload.password,
             patient: {
-                name: formData.get("name"),
-                address: formData.get("address"),
-                email: formData.get("email"),
+                name: validatedPayload.name,
+                address: validatedPayload.address,
+                email: validatedPayload.email,
             },
         };
 
