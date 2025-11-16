@@ -22,7 +22,7 @@ const ManagementPageHeader = ({
     children,
 }: ManagementPageHeaderProps) => {
     const Icon = action?.icon || Plus;
-    
+
     return (
         <div className="flex items-center justify-between">
             <div>
@@ -32,7 +32,10 @@ const ManagementPageHeader = ({
                 )}
             </div>
             {action && (
-                <Button onClick={action.onClick}>
+                <Button
+                    onClick={action.onClick}
+                    className="cursor-pointer"
+                >
                     <Icon className="mr-2 h-4 w-4" />
                     {action.label}
                 </Button>

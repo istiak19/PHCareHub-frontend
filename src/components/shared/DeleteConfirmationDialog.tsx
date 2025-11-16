@@ -28,7 +28,7 @@ const DeleteConfirmationDialog = ({
     itemName,
     isDeleting,
 }: DeleteConfirmDialogProps) => {
-    
+
     return (
         <AlertDialog open={open} onOpenChange={onOpenChange}>
             <AlertDialogContent>
@@ -44,11 +44,15 @@ const DeleteConfirmationDialog = ({
                     </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                    <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
+                    <AlertDialogCancel
+                        className="cursor-pointer"
+                        disabled={isDeleting}
+                    >Cancel
+                    </AlertDialogCancel>
                     <AlertDialogAction
                         onClick={onConfirm}
                         disabled={isDeleting}
-                        className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                        className="bg-destructive text-destructive-foreground hover:bg-destructive/90 cursor-pointer"
                     >
                         {isDeleting ? "Deleting..." : "Delete"}
                     </AlertDialogAction>

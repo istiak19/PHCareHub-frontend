@@ -1,4 +1,5 @@
 "use client";
+
 import { RefreshCcw } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
@@ -23,16 +24,17 @@ const RefreshButton = ({
             router.refresh();
         });
     };
-    
+
     return (
         <Button
             size={size}
             variant={variant}
             onClick={handleRefresh}
             disabled={isPending}
+            className="cursor-pointer"
         >
             <RefreshCcw
-                className={`h-4 w-4 ${isPending ? "animate-spin" : ""} ${showLabel ? "mr-2" : ""
+                className={`h-4 w-4 ${isPending ? "animate-spin" : ""} ${showLabel ? "" : ""
                     }`}
             />
             {showLabel && "Refresh"}

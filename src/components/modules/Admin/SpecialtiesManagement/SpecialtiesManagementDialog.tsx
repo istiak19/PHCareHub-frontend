@@ -1,4 +1,5 @@
 "use client";
+
 import InputFieldError from "@/components/shared/InputFieldError";
 import { Button } from "@/components/ui/button";
 import {
@@ -63,10 +64,15 @@ const SpecialtiesFormDialog = ({
               variant="outline"
               onClick={onClose}
               disabled={pending}
+              className="cursor-pointer"
             >
               Cancel
             </Button>
-            <Button type="submit" disabled={pending}>
+            <Button
+              type="submit"
+              disabled={pending}
+              className="cursor-pointer"
+            >
               {pending ? "Saving..." : "Save Specialty"}
             </Button>
           </div>
