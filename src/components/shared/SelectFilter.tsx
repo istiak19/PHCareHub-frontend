@@ -42,6 +42,7 @@ const SelectFilter = ({
             router.push(`?${params.toString()}`);
         });
     };
+
     return (
         <Select
             value={currentValue}
@@ -49,12 +50,19 @@ const SelectFilter = ({
             disabled={isPending}
         >
             <SelectTrigger>
-                <SelectValue placeholder={placeholder} />
+                <SelectValue
+                    className="cursor-pointer"
+                    placeholder={placeholder}
+                />
             </SelectTrigger>
             <SelectContent>
                 <SelectItem value="All">All</SelectItem>
                 {options.map((option) => (
-                    <SelectItem key={option.value} value={option.value}>
+                    <SelectItem
+                        className="cursor-pointer"
+                        key={option.value}
+                        value={option.value}
+                    >
                         {option.label}
                     </SelectItem>
                 ))}

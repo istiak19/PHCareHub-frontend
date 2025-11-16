@@ -15,6 +15,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
+
 import { createDoctor, updateDoctor } from "@/services/admin/doctorManagement";
 import { IDoctor } from "@/types/doctor";
 import { ISpecialty } from "@/types/specialties";
@@ -27,7 +28,7 @@ interface IDoctorFormDialogProps {
     onSuccess: () => void;
     doctor?: IDoctor;
     specialities?: ISpecialty[];
-};
+}
 
 const DoctorFormDialog = ({
     open,
@@ -38,7 +39,10 @@ const DoctorFormDialog = ({
 }: IDoctorFormDialogProps) => {
     const isEdit = !!doctor;
 
-    const [selectedSpecialty, setSelectedSpecialty] = useState<string>("");
+    const [selectedSpecialty, setSelectedSpecialty] = useState<string>(
+        doctor?.doctorSpecialties?.[0]?.specialities?.title || ""
+    );
+
     const [gender, setGender] = useState<"MALE" | "FEMALE">(
         doctor?.gender || "MALE"
     );
@@ -48,8 +52,6 @@ const DoctorFormDialog = ({
         null
     );
 
-    console.log(state)
-
     useEffect(() => {
         if (state?.success) {
             toast.success(state.message);
@@ -57,29 +59,34 @@ const DoctorFormDialog = ({
             onClose();
         } else if (state && !state.success) {
             toast.error(state.message);
-        };
+        }
     }, [state, onSuccess, onClose]);
 
     return (
         <Dialog open={open} onOpenChange={onClose}>
-            <DialogContent className="max-h-[90vh] flex flex-col p-0">
+            <DialogContent className="max-h-[90vh] flex flex-col p-0 dark:bg-neutral-900">
                 <DialogHeader className="px-6 pt-6 pb-4">
-                    <DialogTitle>{isEdit ? "Edit Doctor" : "Add New Doctor"}</DialogTitle>
+                    <DialogTitle className="dark:text-white">
+                        {isEdit ? "Edit Doctor" : "Add New Doctor"}
+                    </DialogTitle>
                 </DialogHeader>
 
                 <form action={formAction} className="flex flex-col flex-1 min-h-0">
                     <div className="flex-1 overflow-y-auto px-6 space-y-4 pb-4">
+
+                        {/* Name */}
                         <Field>
                             <FieldLabel htmlFor="name">Name</FieldLabel>
                             <Input
                                 id="name"
                                 name="name"
                                 placeholder="Dr. John Doe"
-                                defaultValue={isEdit ? doctor?.name : undefined}
+                                defaultValue={isEdit ? doctor?.name : ""}
                             />
                             <InputFieldError state={state} field="name" />
                         </Field>
 
+                        {/* Email */}
                         <Field>
                             <FieldLabel htmlFor="email">Email</FieldLabel>
                             <Input
@@ -87,22 +94,18 @@ const DoctorFormDialog = ({
                                 name="email"
                                 type="email"
                                 placeholder="doctor@example.com"
-                                defaultValue={isEdit ? doctor?.email : undefined}
+                                defaultValue={isEdit ? doctor?.email : ""}
                                 disabled={isEdit}
                             />
                             <InputFieldError state={state} field="email" />
                         </Field>
 
+                        {/* Passwords only for create */}
                         {!isEdit && (
                             <>
                                 <Field>
                                     <FieldLabel htmlFor="password">Password</FieldLabel>
-                                    <Input
-                                        id="password"
-                                        name="password"
-                                        type="password"
-                                        placeholder="Enter password"
-                                    />
+                                    <Input id="password" name="password" type="password" />
                                     <InputFieldError state={state} field="password" />
                                 </Field>
 
@@ -114,28 +117,33 @@ const DoctorFormDialog = ({
                                         id="confirmPassword"
                                         name="confirmPassword"
                                         type="password"
-                                        placeholder="Confirm password"
                                     />
                                     <InputFieldError state={state} field="confirmPassword" />
                                 </Field>
                             </>
                         )}
 
+                        {/* Specialty */}
                         <Field>
                             <FieldLabel htmlFor="specialities">Specialty</FieldLabel>
+
+                            {/* 🔹 Restored old defaultValue logic */}
+                            {/* defaultValue={isEdit ? doctor?.doctorSpecialties?.[0]?.specialties?.title : ""} */}
+
                             <Input
                                 id="specialities"
                                 name="specialities"
-                                placeholder="Select a speciality"
-                                // defaultValue={isEdit ? doctor?.doctorSpecialties?.[0]?.specialties?.title : ""}
-                                defaultValue={selectedSpecialty}
                                 type="hidden"
+                                defaultValue={selectedSpecialty}
                             />
+
                             <Select
                                 value={
-                                    //   isEdit
-                                    //     ? doctor?.doctorSpecialties?.[0]?.specialties?.title || ""
-                                    //     : selectedSpeciality
+                                    // 🔹 Restored previous logic
+                                    // isEdit
+                                    //   ? doctor?.doctorSpecialties?.[0]?.specialties?.title || ""
+                                    //   : selectedSpeciality
+
                                     selectedSpecialty
                                 }
                                 onValueChange={setSelectedSpecialty}
@@ -143,11 +151,12 @@ const DoctorFormDialog = ({
                                 <SelectTrigger>
                                     <SelectValue placeholder="Select a specialty" />
                                 </SelectTrigger>
+
                                 <SelectContent>
-                                    {specialities && specialities.length > 0 ? (
-                                        specialities.map((speciality) => (
-                                            <SelectItem key={speciality.id} value={speciality.title}>
-                                                {speciality.title}
+                                    {specialities?.length ? (
+                                        specialities.map((s) => (
+                                            <SelectItem key={s.id} value={s.title}>
+                                                {s.title}
                                             </SelectItem>
                                         ))
                                     ) : (
@@ -157,12 +166,15 @@ const DoctorFormDialog = ({
                                     )}
                                 </SelectContent>
                             </Select>
-                            <p className="text-xs text-gray-500 mt-1">
+
+                            <p className="text-xs text-muted-foreground mt-1">
                                 Select a specialty for the doctor
                             </p>
+
                             <InputFieldError state={state} field="specialities" />
                         </Field>
 
+                        {/* Contact */}
                         <Field>
                             <FieldLabel htmlFor="contactNumber">Contact Number</FieldLabel>
                             <Input
@@ -174,17 +186,19 @@ const DoctorFormDialog = ({
                             <InputFieldError state={state} field="contactNumber" />
                         </Field>
 
+                        {/* Address */}
                         <Field>
                             <FieldLabel htmlFor="address">Address</FieldLabel>
                             <Input
                                 id="address"
                                 name="address"
-                                placeholder="123 Main St, City, Country"
-                                defaultValue={isEdit ? doctor?.address : undefined}
+                                placeholder="123 Main St"
+                                defaultValue={doctor?.address}
                             />
                             <InputFieldError state={state} field="address" />
                         </Field>
 
+                        {/* Registration Number */}
                         <Field>
                             <FieldLabel htmlFor="registrationNumber">
                                 Registration Number
@@ -193,74 +207,74 @@ const DoctorFormDialog = ({
                                 id="registrationNumber"
                                 name="registrationNumber"
                                 placeholder="REG123456"
-                                defaultValue={isEdit ? doctor?.registrationNumber : undefined}
+                                defaultValue={doctor?.registrationNumber}
                             />
                             <InputFieldError state={state} field="registrationNumber" />
                         </Field>
 
+                        {/* Experience */}
                         <Field>
-                            <FieldLabel htmlFor="experience">
-                                Experience (in years)
-                            </FieldLabel>
+                            <FieldLabel htmlFor="experience">Experience (years)</FieldLabel>
                             <Input
                                 id="experience"
                                 name="experience"
                                 type="number"
-                                placeholder="5"
-                                defaultValue={isEdit ? doctor?.experience : undefined}
                                 min="0"
+                                placeholder="5"
+                                defaultValue={doctor?.experience}
                             />
                             <InputFieldError state={state} field="experience" />
                         </Field>
 
+                        {/* Gender */}
                         <Field>
                             <FieldLabel htmlFor="gender">Gender</FieldLabel>
-                            <Input
-                                id="gender"
-                                name="gender"
-                                placeholder="Select gender"
-                                defaultValue={gender}
-                                type="hidden"
-                            />
+                            <Input id="gender" name="gender" type="hidden" defaultValue={gender} />
+
                             <Select
                                 value={gender}
-                                onValueChange={(value) => setGender(value as "MALE" | "FEMALE")}
+                                onValueChange={(val) => setGender(val as "MALE" | "FEMALE")}
                             >
                                 <SelectTrigger>
                                     <SelectValue placeholder="Select gender" />
                                 </SelectTrigger>
+
                                 <SelectContent>
                                     <SelectItem value="MALE">Male</SelectItem>
                                     <SelectItem value="FEMALE">Female</SelectItem>
                                 </SelectContent>
                             </Select>
+
                             <InputFieldError state={state} field="gender" />
                         </Field>
 
+                        {/* Appointment Fee */}
                         <Field>
                             <FieldLabel htmlFor="appointmentFee">Appointment Fee</FieldLabel>
                             <Input
                                 id="appointmentFee"
                                 name="appointmentFee"
                                 type="number"
-                                placeholder="100"
-                                defaultValue={isEdit ? doctor?.appointmentFee : undefined}
                                 min="0"
+                                placeholder="100"
+                                defaultValue={doctor?.appointmentFee}
                             />
                             <InputFieldError state={state} field="appointmentFee" />
                         </Field>
 
+                        {/* Qualification */}
                         <Field>
                             <FieldLabel htmlFor="qualification">Qualification</FieldLabel>
                             <Input
                                 id="qualification"
                                 name="qualification"
                                 placeholder="MBBS, MD"
-                                defaultValue={isEdit ? doctor?.qualification : undefined}
+                                defaultValue={doctor?.qualification}
                             />
                             <InputFieldError state={state} field="qualification" />
                         </Field>
 
+                        {/* Working Place */}
                         <Field>
                             <FieldLabel htmlFor="currentWorkingPlace">
                                 Current Working Place
@@ -269,49 +283,40 @@ const DoctorFormDialog = ({
                                 id="currentWorkingPlace"
                                 name="currentWorkingPlace"
                                 placeholder="City Hospital"
-                                defaultValue={isEdit ? doctor?.currentWorkingPlace : undefined}
+                                defaultValue={doctor?.currentWorkingPlace}
                             />
                             <InputFieldError state={state} field="currentWorkingPlace" />
                         </Field>
 
+                        {/* Designation */}
                         <Field>
                             <FieldLabel htmlFor="designation">Designation</FieldLabel>
                             <Input
                                 id="designation"
                                 name="designation"
                                 placeholder="Senior Consultant"
-                                defaultValue={isEdit ? doctor?.designation : undefined}
+                                defaultValue={doctor?.designation}
                             />
                             <InputFieldError state={state} field="designation" />
                         </Field>
 
+                        {/* File (Only Create) */}
                         {!isEdit && (
                             <Field>
                                 <FieldLabel htmlFor="file">Profile Photo</FieldLabel>
                                 <Input id="file" name="file" type="file" accept="image/*" />
-                                <p className="text-xs text-gray-500 mt-1">
-                                    Upload a profile photo for the doctor
-                                </p>
                                 <InputFieldError state={state} field="file" />
                             </Field>
                         )}
                     </div>
 
-                    <div className="flex justify-end gap-2 px-6 py-4 border-t bg-gray-50">
-                        <Button
-                            type="button"
-                            variant="outline"
-                            onClick={onClose}
-                            disabled={pending}
-                        >
+                    {/* Footer */}
+                    <div className="flex justify-end gap-2 px-6 py-4 border-t bg-muted">
+                        <Button type="button" variant="outline" onClick={onClose} disabled={pending}>
                             Cancel
                         </Button>
                         <Button type="submit" disabled={pending}>
-                            {pending
-                                ? "Saving..."
-                                : isEdit
-                                    ? "Update Doctor"
-                                    : "Create Doctor"}
+                            {pending ? "Saving..." : isEdit ? "Update Doctor" : "Create Doctor"}
                         </Button>
                     </div>
                 </form>

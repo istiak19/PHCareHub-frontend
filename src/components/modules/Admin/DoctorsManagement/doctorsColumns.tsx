@@ -25,10 +25,10 @@ export const doctorsColumns: Column<IDoctor>[] = [
                 {doctor.doctorSpecialties && doctor.doctorSpecialties.length > 0 ? (
                     doctor.doctorSpecialties.map((specialty, index) => (
                         <span
-                            key={specialty.specialties?.id || index}
+                            key={specialty.specialities?.id || index}
                             className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800"
                         >
-                            {specialty.specialties?.title || "N/A"}
+                            {specialty.specialities?.title || "N/A"}
                         </span>
                     ))
                 ) : (

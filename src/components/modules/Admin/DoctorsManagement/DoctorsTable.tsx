@@ -1,6 +1,7 @@
 "use client";
+
 import DeleteConfirmationDialog from "@/components/shared/DeleteConfirmationDialog";
-import { softDeleteDoctor } from "@/services/admin/doctorManagement";
+import { deleteDoctor } from "@/services/admin/doctorManagement";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
@@ -46,7 +47,7 @@ const DoctorsTable = ({ doctors, specialities }: DoctorsTableProps) => {
         if (!deletingDoctor) return;
 
         setIsDeleting(true);
-        const result = await softDeleteDoctor(deletingDoctor.id!);
+        const result = await deleteDoctor(deletingDoctor.id!);
         setIsDeleting(false);
 
         if (result.success) {
