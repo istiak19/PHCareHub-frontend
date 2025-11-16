@@ -8,7 +8,7 @@ import { createDoctorZodSchema, updateDoctorZodSchema } from "@/zod/doctors.vali
 
 export async function createDoctor(_prevState: any, formData: FormData) {
     try {
-        const payload: IDoctor = {
+        const payload = {
             name: formData.get("name") as string,
             email: formData.get("email") as string,
             contactNumber: formData.get("contactNumber") as string,
