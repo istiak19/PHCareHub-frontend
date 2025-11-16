@@ -11,6 +11,7 @@ import { useActionState } from "react";
 import { motion } from "framer-motion";
 import { Eye, EyeOff } from "lucide-react";
 import { toast } from "react-toastify";
+import InputFieldError from "@/components/shared/InputFieldError";
 
 const RegisterForm = () => {
     const [state, formAction, isPending] = useActionState(registerPatient, null);
@@ -37,11 +38,12 @@ const RegisterForm = () => {
                 <Field>
                     <FieldLabel htmlFor="name">Full Name</FieldLabel>
                     <Input id="name" name="name" type="text" placeholder="John Doe" />
-                    {getFieldError("name") && (
+                    {/* {getFieldError("name") && (
                         <FieldDescription className="text-red-500 text-xs mt-1">
                             {getFieldError("name")}
                         </FieldDescription>
-                    )}
+                    )} */}
+                    <InputFieldError field="name" state={state} />
                 </Field>
 
                 {/* Address */}
