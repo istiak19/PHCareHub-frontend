@@ -26,8 +26,8 @@ const SpecialtiesManagementHeader = () => {
             />
 
             <ManagementPageHeader
-                title="Specialties Management"
-                description="Manage Specialties information and details"
+                title="Specialty Management"
+                description="Manage and update specialty information and details."
                 action={{
                     label: "Add Specialty",
                     icon: Plus,
