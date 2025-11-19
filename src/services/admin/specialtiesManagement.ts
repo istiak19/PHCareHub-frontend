@@ -1,13 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-
 "use server";
 
 import { serverFetch } from "@/lib/server-fetch";
 import { zodValidator } from "@/lib/zodValidator";
 import { createSpecialtiesZodSchema } from "@/zod/specialties.validation";
-
-
-
 
 export async function createSpecialties(_prevState: any, formData: FormData) {
     try {
