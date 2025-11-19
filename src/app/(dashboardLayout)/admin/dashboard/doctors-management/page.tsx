@@ -22,17 +22,17 @@ const DoctorManagementPage = async ({
     const doctor = await getDoctors(queryString);
 
     const totalPages = Math.ceil(
-        doctor.data.meta.total / doctor.data.meta.limit
+        doctor?.data?.meta?.total / doctor?.data?.meta?.limit
     );
 
     return (
         <div className="space-y-5">
-            <DoctorsManagementHeader specialties={specialtiesResult?.data?.data} />
+            <DoctorsManagementHeader specialties={specialtiesResult?.data?.data || []} />
             <div className="flex space-x-2">
                 <SearchFilter paramName="searchTerm" placeholder="Search doctors..." />
                 <SelectFilter
                     paramName="specialty" // ?specialty="Cardiology"
-                    options={specialtiesResult?.data?.data.map((specialty: ISpecialty) => ({
+                    options={specialtiesResult?.data?.data?.map((specialty: ISpecialty) => ({
                         label: specialty.title,
                         value: specialty.title,
                     }))}
@@ -41,10 +41,10 @@ const DoctorManagementPage = async ({
                 <RefreshButton />
             </div>
             <Suspense fallback={<TableSkeleton columns={10} rows={10} />}>
-                <DoctorsTable doctors={doctor?.data?.data} specialities={specialtiesResult?.data?.data} />
+                <DoctorsTable doctors={doctor?.data?.data} specialities={specialtiesResult?.data?.data || []} />
                 <TablePagination
-                    currentPage={doctor.data.meta.page}
-                    totalPages={totalPages}
+                    currentPage={doctor?.data?.meta?.page || 1}
+                    totalPages={totalPages || 1}
                 />
             </Suspense>
         </div>
