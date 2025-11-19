@@ -40,6 +40,7 @@ export async function createDoctor(_prevState: any, formData: FormData) {
     };
 
     const validatedPayload = zodValidator(validationPayload, createDoctorZodSchema);
+    // console.log("🔥 FINAL DATA SENT TO:", validatedPayload);
 
     if (!validatedPayload.success && validatedPayload.errors) {
         return {
@@ -75,6 +76,9 @@ export async function createDoctor(_prevState: any, formData: FormData) {
             specialties: validatedPayload.data.specialties,
         }
     };
+
+    // console.log("🔥 FINAL DATA SENT TO BACKEND:", backendPayload);
+
     const newFormData = new FormData();
     newFormData.append("data", JSON.stringify(backendPayload));
     newFormData.append("file", formData.get("file") as Blob);
