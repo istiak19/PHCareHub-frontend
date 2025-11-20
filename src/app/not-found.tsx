@@ -1,42 +1,66 @@
+"use client";
+
+import { Button } from "@/components/ui/button";
+import { AlertCircle, ArrowLeft, Home } from "lucide-react";
 import Link from "next/link";
-import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 export default function NotFound() {
+    const router = useRouter();
+
     return (
-        <div className="min-h-screen flex flex-col items-center justify-center bg-linear-to-b from-blue-500 via-blue-400 to-blue-300 dark:from-blue-950 dark:via-blue-900 dark:to-blue-800 text-center px-6 transition-colors duration-300">
-            {/* Logo */}
-            <div className="mb-6">
-                <Image
-                    src="/logo.png"
-                    alt="phCareHub Logo"
-                    width={90}
-                    height={90}
-                />
+        <>
+            <div className="flex min-h-screen items-center justify-center bg-linear-to-b from-background to-muted/20">
+                <div className="container flex flex-col items-center justify-center gap-8 px-4 text-center">
+                    <div className="scale-in">
+                        <div className="relative">
+                            {/* Animated Circle */}
+                            <div className="absolute inset-0 rounded-full bg-destructive/10 pulse-scale" />
+
+                            {/* 404 Text */}
+                            <div className="relative z-10 flex h-48 w-48 items-center justify-center">
+                                <h1 className="text-8xl font-bold text-primary fade-up-delay-1">
+                                    404
+                                </h1>
+                            </div>
+
+                            {/* Floating Icon */}
+                            <div className="absolute -top-4 -right-4 rounded-full bg-destructive p-3 text-destructive-foreground shadow-lg float-icon">
+                                <AlertCircle className="h-8 w-8" />
+                            </div>
+                        </div>
+                    </div>{" "}
+                    <div className="space-y-4 fade-up-delay-2">
+                        <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
+                            Page Not Found
+                        </h2>
+                        <p className="text-lg text-muted-foreground max-w-md">
+                            Oops! The page you&apos;re looking for doesn&apos;t exist. It
+                            might have been moved or deleted.
+                        </p>
+                    </div>
+                    <div className="flex flex-col sm:flex-row gap-4 fade-up-delay-3">
+                        <Button
+                            size="lg"
+                            onClick={() => router.back()}
+                            variant="outline"
+                            className="gap-2"
+                        >
+                            <ArrowLeft className="h-4 w-4" />
+                            Go Back
+                        </Button>
+                        <Button size="lg" asChild className="gap-2">
+                            <Link href="/">
+                                <Home className="h-4 w-4" />
+                                Back to Home
+                            </Link>
+                        </Button>
+                    </div>
+                    {/* Decorative Elements */}
+                    <div className="absolute top-1/4 left-1/4 h-64 w-64 rounded-full bg-primary/5 blur-3xl glow-1" />
+                    <div className="absolute bottom-1/4 right-1/4 h-64 w-64 rounded-full bg-blue-500/5 blur-3xl glow-2" />
+                </div>
             </div>
-
-            {/* Heading */}
-            <h1 className="text-4xl font-bold text-white mb-3 drop-shadow-lg">
-                404 - Page Not Found
-            </h1>
-
-            {/* Description */}
-            <p className="text-gray-100 dark:text-gray-300 mb-8 max-w-md">
-                Sorry, we couldn’t find the page you’re looking for. It may have been
-                moved, deleted, or the link is incorrect.
-            </p>
-
-            {/* Return Home Button */}
-            <Link
-                href="/"
-                className="bg-white text-blue-700 dark:bg-blue-800 dark:text-blue-100 font-semibold px-6 py-3 rounded-xl shadow hover:bg-blue-100 dark:hover:bg-blue-700 transition-transform transform hover:-translate-y-1"
-            >
-                Return to Home
-            </Link>
-
-            {/* Footer */}
-            <p className="mt-10 text-sm text-gray-50 dark:text-gray-400">
-                &copy; {new Date().getFullYear()} PHCareHub. All rights reserved.
-            </p>
-        </div>
+        </>
     );
 };
