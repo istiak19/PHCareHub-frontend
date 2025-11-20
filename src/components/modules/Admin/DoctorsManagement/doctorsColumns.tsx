@@ -1,4 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+"use client";
+
 import { DateCell } from "@/components/shared/cell/DateCell";
 import { StatusBadgeCell } from "@/components/shared/cell/StatusBadgeCell";
 import { UserInfoCell } from "@/components/shared/cell/UserInfoCell";
@@ -16,10 +18,12 @@ export const doctorsColumns: Column<IDoctor>[] = [
                 photo={doctor.profilePhoto as string}
             />
         ),
+        sortKey: "name",
     },
     {
         header: "Specialties",
         accessor: (doctor) => {
+            // Handle both possible response structures
             const specialties: any = doctor.doctorSpecialties;
 
             if (!specialties || specialties.length === 0) {
@@ -29,6 +33,7 @@ export const doctorsColumns: Column<IDoctor>[] = [
             return (
                 <div className="flex flex-wrap gap-1">
                     {specialties.map((item: any, index: any) => {
+                        // Handle nested specialty object
                         const specialtyTitle = item.specialities?.title || "N/A";
                         const specialtyId =
                             item.specialties?.id || item.specialitiesId || index;
@@ -61,6 +66,7 @@ export const doctorsColumns: Column<IDoctor>[] = [
                 {doctor.experience ?? 0} years
             </span>
         ),
+        sortKey: "experience",
     },
     {
         header: "Fee",
@@ -69,6 +75,7 @@ export const doctorsColumns: Column<IDoctor>[] = [
                 ${doctor.appointmentFee}
             </span>
         ),
+        sortKey: "appointmentFee",
     },
     {
         header: "Rating",
@@ -80,6 +87,7 @@ export const doctorsColumns: Column<IDoctor>[] = [
                 </span>
             </div>
         ),
+        sortKey: "averageRating",
     },
     {
         header: "Gender",
@@ -94,5 +102,6 @@ export const doctorsColumns: Column<IDoctor>[] = [
     {
         header: "Joined",
         accessor: (doctor) => <DateCell date={doctor.createdAt} />,
+        sortKey: "createdAt",
     },
 ];
