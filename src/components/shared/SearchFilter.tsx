@@ -1,10 +1,9 @@
 "use client";
-
+import { useDebounce } from "@/hooks/useDebounce";
 import { Search } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState, useTransition } from "react";
 import { Input } from "../ui/input";
-import { useDebounce } from "@/hooks/useDebounce";
 
 interface SearchFilterProps {
     placeholder?: string;
@@ -36,12 +35,13 @@ const SearchFilter = ({
         } else {
             params.delete(paramName); // remove searchTerm param
             params.delete("page"); // reset to first page on search clear
-        };
+        }
 
         startTransition(() => {
             router.push(`?${params.toString()}`);
         });
-    }, [debouncedValue, paramName, router, searchParams]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [debouncedValue, paramName, router]);
 
     return (
         <div className="relative">

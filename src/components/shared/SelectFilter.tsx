@@ -13,6 +13,7 @@ import {
 interface SelectFilterProps {
     paramName: string; // ?gender=
     placeholder?: string;
+    defaultValue?: string;
     options: { label: string; value: string }[];
 }
 
@@ -20,29 +21,30 @@ const SelectFilter = ({
     paramName,
     placeholder,
     options,
+    defaultValue = "All",
 }: SelectFilterProps) => {
     const router = useRouter();
     const searchParams = useSearchParams();
     const [isPending, startTransition] = useTransition();
 
-    const currentValue = searchParams.get(paramName) || "All";
+    const currentValue = searchParams.get(paramName) || defaultValue;
 
     const handleChange = (value: string) => {
         const params = new URLSearchParams(searchParams.toString());
 
-        if (value === "All") {
+        if (value === defaultValue) {
             params.delete(paramName);
         } else if (value) {
             params.set(paramName, value);
         } else {
             params.delete(paramName);
-        };
+        }
 
         startTransition(() => {
             router.push(`?${params.toString()}`);
         });
     };
-
+    
     return (
         <Select
             value={currentValue}
@@ -50,19 +52,12 @@ const SelectFilter = ({
             disabled={isPending}
         >
             <SelectTrigger>
-                <SelectValue
-                    className="cursor-pointer"
-                    placeholder={placeholder}
-                />
+                <SelectValue placeholder={placeholder} />
             </SelectTrigger>
             <SelectContent>
-                <SelectItem value="All">All</SelectItem>
+                <SelectItem value={defaultValue}>{defaultValue}</SelectItem>
                 {options.map((option) => (
-                    <SelectItem
-                        className="cursor-pointer"
-                        key={option.value}
-                        value={option.value}
-                    >
+                    <SelectItem key={option.value} value={option.value}>
                         {option.label}
                     </SelectItem>
                 ))}
