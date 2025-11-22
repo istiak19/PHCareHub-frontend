@@ -4,6 +4,7 @@ import { NextResponse } from 'next/server';
 import { UserRole } from './types';
 import { getDefaultDashboardRoute, getRouteOwner, isAuthRoute } from './utility/helper';
 import { deleteCookie } from './utility/tokenHandlers';
+import { getMeUser } from './services/user/getMeUser';
 
 // This function can be marked `async` if using `await` inside
 export async function proxy(request: NextRequest) {
@@ -52,12 +53,30 @@ export async function proxy(request: NextRequest) {
         return NextResponse.redirect(loginUrl);
     };
 
-    // Rule 3 : User is trying to access common protected route
+    // Rule 3 : User need password change
+
+    if (accessToken) {
+        const userInfo = await getMeUser();
+        if (userInfo.needPasswordChange) {
+            if (pathname !== "/reset-password") {
+                const resetPasswordUrl = new URL("/reset-password", request.url);
+                resetPasswordUrl.searchParams.set("redirect", pathname);
+                return NextResponse.redirect(resetPasswordUrl);
+            }
+            return NextResponse.next();
+        };
+
+        if (userInfo && !userInfo.needPasswordChange && pathname === '/reset-password') {
+            return NextResponse.redirect(new URL(getDefaultDashboardRoute(userRole as UserRole), request.url));
+        };
+    };
+
+    // Rule 4 : User is trying to access common protected route
     if (routerOwner === "COMMON") {
         return NextResponse.next();
     };
 
-    // Rule 4 : User is trying to access role based protected route
+    // Rule 5 : User is trying to access role based protected route
     if (routerOwner === "ADMIN" || routerOwner === "DOCTOR" || routerOwner === "PATIENT") {
         if (userRole !== routerOwner) {
             return NextResponse.redirect(new URL(getDefaultDashboardRoute(userRole as UserRole), request.url))
