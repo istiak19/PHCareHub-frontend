@@ -23,6 +23,8 @@ const ResetPasswordForm = ({ redirect }: { redirect?: string }) => {
         }
     }, [state]);
 
+    console.log(state)
+
     return (
         <form action={formAction}>
             {redirect && <Input type="hidden" name="redirect" value={redirect} />}
