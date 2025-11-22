@@ -1,9 +1,9 @@
 import { RouteConfig, UserRole } from "@/types";
 
-export const authRoutes = ["/login", "/register", "/forgot-password", "/reset-password"];
+export const authRoutes = ["/login", "/register", "/forgot-password"];
 
 export const commonProtectedRoutes: RouteConfig = {
-    exact: ["/my-profile", "/settings"],
+    exact: ["/my-profile", "/settings", "/reset-password"],
     patterns: [], // [/password/change-password, /password/reset-password => /password/*]
 };
 
