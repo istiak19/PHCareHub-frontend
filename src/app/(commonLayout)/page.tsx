@@ -1,11 +1,20 @@
-import DoctorList from "@/components/modules/Home/DoctorList";
+import DoctorListClient from "@/components/modules/Home/DoctorListClient";
 import Hero from "@/components/modules/Home/Hero";
 import Specialties from "@/components/modules/Home/Specialties";
 import Steps from "@/components/modules/Home/Steps";
 import Testimonials from "@/components/modules/Home/Testimonials";
+import { getDoctors } from "@/services/admin/doctorManagement";
 import Head from "next/head";
 
-export default function Home() {
+export default async function Home() {
+  const doctorsResponse = await getDoctors();
+  let doctors = doctorsResponse?.data?.data || [];
+  // Force convert to pure array → removes custom properties
+  doctors = Array.from(doctors);
+  // Take only first 6 items
+  doctors = doctors.slice(0, 6);
+
+
   return (
     <>
       <Head>
@@ -20,7 +29,7 @@ export default function Home() {
       <main>
         <Hero />
         <Specialties />
-        <DoctorList />
+        <DoctorListClient doctors={doctors} />
         <Steps />
         <Testimonials />
       </main>

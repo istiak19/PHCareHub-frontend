@@ -52,6 +52,7 @@
 
 
 export interface IDoctor {
+    doctorSchedules: never[];
     id?: string;
     name: string;
     email: string;
