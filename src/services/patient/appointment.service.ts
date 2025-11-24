@@ -34,6 +34,7 @@ export async function getMyAppointments(queryString?: string) {
     try {
         const response = await serverFetch.get(`/appointment/my-appointments${queryString ? `?${queryString}` : "?sortBy=createdAt&sortOrder=desc"}`);
         const result = await response.json();
+
         return result;
     } catch (error: any) {
         console.error("Error fetching appointments:", error);
@@ -52,6 +53,7 @@ export async function getAppointmentById(appointmentId: string) {
     try {
         const response = await serverFetch.get(`/appointment/${appointmentId}`);
         const result = await response.json();
+        
         return result;
     } catch (error: any) {
         console.error("Error fetching appointment:", error);
