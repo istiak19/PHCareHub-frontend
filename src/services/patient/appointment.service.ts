@@ -7,7 +7,10 @@ import { IAppointmentFormData } from "@/types/appointments.interface";
 export async function createAppointment(data: IAppointmentFormData) {
     try {
         const response = await serverFetch.post("/appointment", {
-            body: JSON.stringify(data),
+            body: JSON.stringify({
+                doctorId: data.doctorId,
+                scheduleId: data.scheduleId,
+            }),
             headers: {
                 "Content-Type": "application/json",
             },
@@ -29,11 +32,8 @@ export async function createAppointment(data: IAppointmentFormData) {
 
 export async function getMyAppointments(queryString?: string) {
     try {
-        const response = await serverFetch.get(
-            `/appointment/my-appointment${queryString ? `?${queryString}` : "?sortBy=createdAt&sortOrder=desc"}`
-        );
+        const response = await serverFetch.get(`/appointment/my-appointments${queryString ? `?${queryString}` : "?sortBy=createdAt&sortOrder=desc"}`);
         const result = await response.json();
-        console.log({ result });
         return result;
     } catch (error: any) {
         console.error("Error fetching appointments:", error);

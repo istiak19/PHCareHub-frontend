@@ -42,11 +42,12 @@ const AppointmentConfirmation = ({
                 scheduleId: schedule.id,
             });
 
+            console.log(result);
+
             if (result.success) {
                 setBookingSuccess(true);
                 toast.success("Appointment booked successfully!");
 
-                // Redirect after 2 seconds
                 setTimeout(() => {
                     router.push("/dashboard/my-appointments");
                 }, 2000);
@@ -124,13 +125,14 @@ const AppointmentConfirmation = ({
                                         <Stethoscope className="h-4 w-4 text-muted-foreground" />
                                         <span className="text-sm font-medium">Specialties</span>
                                     </div>
+
                                     <div className="flex flex-wrap gap-2">
                                         {doctor.doctorSpecialties.map((ds, idx) => (
                                             <span
                                                 key={idx}
                                                 className="px-2 py-1 bg-blue-50 text-blue-700 text-xs rounded-md border border-blue-200"
                                             >
-                                                {ds.specialties?.title || "N/A"}
+                                                {ds.specialities?.title || "N/A"}
                                             </span>
                                         ))}
                                     </div>
@@ -194,7 +196,7 @@ const AppointmentConfirmation = ({
 
                         <Separator />
 
-                        <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                        <div className="border border-blue-200 rounded-lg p-3">
                             <div className="flex justify-between items-center">
                                 <span className="text-sm font-medium text-blue-900">
                                     Consultation Fee
@@ -216,7 +218,7 @@ const AppointmentConfirmation = ({
                         </CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-4">
-                        <div className="bg-linear-to-br from-blue-50 to-indigo-50 border border-blue-200 rounded-lg p-6 space-y-4">
+                        <div className="border border-blue-200 rounded-lg p-6 space-y-4">
                             <div>
                                 <p className="text-sm text-muted-foreground mb-1">Date</p>
                                 <p className="text-2xl font-bold text-blue-900">
