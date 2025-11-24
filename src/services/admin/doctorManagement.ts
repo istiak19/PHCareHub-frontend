@@ -37,6 +37,7 @@ export async function createDoctor(_prevState: any, formData: FormData) {
         password: formData.get("password") as string,
         specialties: specialties,
         profilePhoto: formData.get("file") as File,
+        doctorSchedules: []
     };
 
     const validatedPayload = zodValidator(validationPayload, createDoctorZodSchema);
