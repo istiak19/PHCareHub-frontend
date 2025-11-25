@@ -18,12 +18,12 @@ import {
     User,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
-// import { useState } from "react";
 import {
     AppointmentStatus,
     IAppointment,
 } from "@/types/appointments.interface";
-// import ReviewDialog from "./ReviewDialog";
+import ReviewDialog from "./ReviewDialog";
+import { useState } from "react";
 
 interface AppointmentDetailProps {
     appointment: IAppointment;
@@ -31,7 +31,7 @@ interface AppointmentDetailProps {
 
 const AppointmentDetails = ({ appointment }: AppointmentDetailProps) => {
     const router = useRouter();
-    //   const [showReviewDialog, setShowReviewDialog] = useState(false);
+    const [showReviewDialog, setShowReviewDialog] = useState(false);
 
     const isCompleted = appointment.status === AppointmentStatus.COMPLETED;
     const canReview = isCompleted && !appointment.review;
@@ -390,14 +390,14 @@ const AppointmentDetails = ({ appointment }: AppointmentDetailProps) => {
             )}
 
             {/* Review Dialog */}
-            {/* {canReview && (
-        <ReviewDialog
-          isOpen={showReviewDialog}
-          onClose={() => setShowReviewDialog(false)}
-          appointmentId={appointment.id}
-          doctorName={appointment.doctor?.name || "the doctor"}
-        />
-      )} */}
+            {canReview && (
+                <ReviewDialog
+                    isOpen={showReviewDialog}
+                    onClose={() => setShowReviewDialog(false)}
+                    appointmentId={appointment.id}
+                    doctorName={appointment.doctor?.name || "the doctor"}
+                />
+            )}
         </div>
     );
 };

@@ -4,7 +4,6 @@ import { IAppointment } from "@/types/appointments.interface";
 
 export default async function MyAppointmentsPage() {
     const response = await getMyAppointments();
-    console.log(response, "-->")
     const appointments: IAppointment[] = response?.data || [];
 
     return (
